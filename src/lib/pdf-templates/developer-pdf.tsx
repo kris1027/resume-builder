@@ -241,7 +241,7 @@ export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperP
                                     <Text style={styles.eduField}>{edu.field}</Text>
                                     <Text style={styles.eduMeta}>
                                         {edu.degree}
-                                        {edu.degree && edu.institution ? ' — ' : ''}
+                                        {edu.degree && edu.institution ? ' - ' : ''}
                                         {edu.institution}
                                     </Text>
                                     <Text style={styles.eduMeta}>
