@@ -4,6 +4,13 @@ import type { ResumeData } from '@/types/form-types';
 import { format } from 'date-fns';
 import { formatLinkedinDisplay } from '@/lib/utils';
 import { getPDFStrings, getDateFnsLocale, type PDFLang } from '@/lib/pdf-translations';
+import {
+    GlobeIcon,
+    LinkedinIcon,
+    MapPinIcon,
+    MailIcon,
+    PhoneIcon,
+} from '@/lib/pdf-templates/pdf-icons';
 
 interface DefaultPDFProps {
     data: ResumeData;
@@ -67,6 +74,7 @@ function createStyles(t: number) {
             flexWrap: 'wrap',
             gap: s(16, 8),
         },
+        contactItem: { flexDirection: 'row', alignItems: 'center', gap: s(4, 2) },
         contactLink: { fontSize: s(9, 7), color: C.gray500, textDecoration: 'none' },
         body: { paddingHorizontal: s(32, 18), paddingBottom: s(24, 10) },
         section: { marginBottom: s(14, 5) },
@@ -166,6 +174,7 @@ function parseDescriptionLines(description: string): string[] {
 
 export function DefaultPDF({ data, compactScale = 0, lang = 'en' }: DefaultPDFProps) {
     const styles = createStyles(compactScale);
+    const iconSize = lerp(9, 7, compactScale);
     const str = getPDFStrings(lang);
     const dateLocale = getDateFnsLocale(lang);
     const {
@@ -199,26 +208,43 @@ export function DefaultPDF({ data, compactScale = 0, lang = 'en' }: DefaultPDFPr
                     {p.title ? <Text style={styles.headerTitle}>{p.title}</Text> : null}
 
                     <View style={styles.contactRow}>
-                        {p.location ? <Text style={styles.contactLink}>{p.location}</Text> : null}
+                        {p.location ? (
+                            <View style={styles.contactItem}>
+                                <MapPinIcon size={iconSize} color={C.gray500} />
+                                <Text style={styles.contactLink}>{p.location}</Text>
+                            </View>
+                        ) : null}
                         {p.email ? (
-                            <Link src={`mailto:${p.email}`} style={styles.contactLink}>
-                                {p.email}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <MailIcon size={iconSize} color={C.gray500} />
+                                <Link src={`mailto:${p.email}`} style={styles.contactLink}>
+                                    {p.email}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.phone ? (
-                            <Link src={`tel:${p.phone}`} style={styles.contactLink}>
-                                {p.phone}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <PhoneIcon size={iconSize} color={C.gray500} />
+                                <Link src={`tel:${p.phone}`} style={styles.contactLink}>
+                                    {p.phone}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.linkedin ? (
-                            <Link src={p.linkedin} style={styles.contactLink}>
-                                {formatLinkedinDisplay(p.linkedin)}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <LinkedinIcon size={iconSize} color={C.gray500} />
+                                <Link src={p.linkedin} style={styles.contactLink}>
+                                    {formatLinkedinDisplay(p.linkedin)}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.website ? (
-                            <Link src={p.website} style={styles.contactLink}>
-                                {p.website}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <GlobeIcon size={iconSize} color={C.gray500} />
+                                <Link src={p.website} style={styles.contactLink}>
+                                    {p.website}
+                                </Link>
+                            </View>
                         ) : null}
                     </View>
                 </View>
