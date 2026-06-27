@@ -4,6 +4,14 @@ import type { ResumeData } from '@/types/form-types';
 import { format } from 'date-fns';
 import { formatLinkedinDisplay } from '@/lib/utils';
 import { getPDFStrings, getDateFnsLocale, type PDFLang } from '@/lib/pdf-translations';
+import { buildResumeMetadata } from '@/lib/pdf-parser';
+import {
+    GlobeIcon,
+    LinkedinIcon,
+    MapPinIcon,
+    MailIcon,
+    PhoneIcon,
+} from '@/lib/pdf-templates/pdf-icons';
 
 interface VeterinaryPDFProps {
     data: ResumeData;
@@ -69,14 +77,19 @@ function createStyles(t: number) {
             flexWrap: 'wrap',
             gap: s(8, 4),
         },
-        contactLink: {
-            fontSize: s(9, 7),
-            color: C.gray600,
-            textDecoration: 'none',
+        contactItem: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: s(4, 2),
             backgroundColor: C.white,
             paddingHorizontal: s(8, 4),
             paddingVertical: s(3, 1),
             borderRadius: 10,
+        },
+        contactLink: {
+            fontSize: s(9, 7),
+            color: C.gray600,
+            textDecoration: 'none',
         },
         body: { flexDirection: 'column', padding: s(20, 10) },
         section: { marginBottom: s(14, 5) },
@@ -185,6 +198,7 @@ function parseDescriptionLines(description: string): string[] {
 
 export function VeterinaryPDF({ data, compactScale = 0, lang = 'en' }: VeterinaryPDFProps) {
     const styles = createStyles(compactScale);
+    const iconSize = lerp(9, 7, compactScale);
     const str = getPDFStrings(lang);
     const dateLocale = getDateFnsLocale(lang);
     const {
@@ -207,6 +221,7 @@ export function VeterinaryPDF({ data, compactScale = 0, lang = 'en' }: Veterinar
             author={`${p.firstName} ${p.lastName}`}
             subject='Professional Resume'
             keywords={skills.map((s) => s.name).join(', ')}
+            creator={buildResumeMetadata('veterinary', data)}
             language={lang}
         >
             <Page size='A4' style={styles.page}>
@@ -216,26 +231,43 @@ export function VeterinaryPDF({ data, compactScale = 0, lang = 'en' }: Veterinar
                     </Text>
                     {p.title ? <Text style={styles.headerTitle}>{p.title}</Text> : null}
                     <View style={styles.contactRow}>
-                        {p.location ? <Text style={styles.contactLink}>{p.location}</Text> : null}
+                        {p.location ? (
+                            <View style={styles.contactItem}>
+                                <MapPinIcon size={iconSize} color={C.gray600} />
+                                <Text style={styles.contactLink}>{p.location}</Text>
+                            </View>
+                        ) : null}
                         {p.email ? (
-                            <Link src={`mailto:${p.email}`} style={styles.contactLink}>
-                                {p.email}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <MailIcon size={iconSize} color={C.gray600} />
+                                <Link src={`mailto:${p.email}`} style={styles.contactLink}>
+                                    {p.email}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.phone ? (
-                            <Link src={`tel:${p.phone}`} style={styles.contactLink}>
-                                {p.phone}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <PhoneIcon size={iconSize} color={C.gray600} />
+                                <Link src={`tel:${p.phone}`} style={styles.contactLink}>
+                                    {p.phone}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.linkedin ? (
-                            <Link src={p.linkedin} style={styles.contactLink}>
-                                {formatLinkedinDisplay(p.linkedin)}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <LinkedinIcon size={iconSize} color={C.gray600} />
+                                <Link src={p.linkedin} style={styles.contactLink}>
+                                    {formatLinkedinDisplay(p.linkedin)}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.website ? (
-                            <Link src={p.website} style={styles.contactLink}>
-                                {p.website}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <GlobeIcon size={iconSize} color={C.gray600} />
+                                <Link src={p.website} style={styles.contactLink}>
+                                    {p.website}
+                                </Link>
+                            </View>
                         ) : null}
                     </View>
                 </View>

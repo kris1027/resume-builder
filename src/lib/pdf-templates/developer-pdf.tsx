@@ -4,6 +4,15 @@ import type { ResumeData } from '@/types/form-types';
 import { format } from 'date-fns';
 import { formatWebsiteDisplay, formatGithubDisplay, formatLinkedinDisplay } from '@/lib/utils';
 import { getPDFStrings, getDateFnsLocale, type PDFLang } from '@/lib/pdf-translations';
+import { buildResumeMetadata } from '@/lib/pdf-parser';
+import {
+    GlobeIcon,
+    GithubIcon,
+    LinkedinIcon,
+    MapPinIcon,
+    MailIcon,
+    PhoneIcon,
+} from '@/lib/pdf-templates/pdf-icons';
 
 interface DeveloperPDFProps {
     data: ResumeData;
@@ -51,6 +60,7 @@ function createStyles(t: number) {
         },
         headerTitle: { fontSize: s(13, 10), marginBottom: s(10, 4) },
         headerRow: { flexDirection: 'row', flexWrap: 'wrap', gap: s(16, 8), marginTop: s(4, 1) },
+        contactItem: { flexDirection: 'row', alignItems: 'center', gap: s(4, 2) },
         headerLink: { color: C.white, fontSize: s(9, 8), textDecoration: 'none' },
         body: { flexDirection: 'column', padding: s(20, 10) },
         section: { marginBottom: s(16, 6) },
@@ -136,6 +146,7 @@ function parseDescriptionLines(description: string): string[] {
 
 export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperPDFProps) {
     const styles = createStyles(compactScale);
+    const iconSize = lerp(9, 8, compactScale);
     const str = getPDFStrings(lang);
     const dateLocale = getDateFnsLocale(lang);
     const {
@@ -158,6 +169,7 @@ export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperP
             author={`${p.firstName} ${p.lastName}`}
             subject='Professional Resume'
             keywords={skills.map((s) => s.name).join(', ')}
+            creator={buildResumeMetadata('developer', data)}
             language={lang}
         >
             <Page size='A4' style={styles.page}>
@@ -168,32 +180,52 @@ export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperP
                     {p.title ? <Text style={styles.headerTitle}>{p.title}</Text> : null}
                     <View style={styles.headerRow}>
                         {p.website ? (
-                            <Link src={p.website} style={styles.headerLink}>
-                                {formatWebsiteDisplay(p.website)}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <GlobeIcon size={iconSize} color={C.white} />
+                                <Link src={p.website} style={styles.headerLink}>
+                                    {formatWebsiteDisplay(p.website)}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.github ? (
-                            <Link src={p.github} style={styles.headerLink}>
-                                {formatGithubDisplay(p.github)}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <GithubIcon size={iconSize} color={C.white} />
+                                <Link src={p.github} style={styles.headerLink}>
+                                    {formatGithubDisplay(p.github)}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.linkedin ? (
-                            <Link src={p.linkedin} style={styles.headerLink}>
-                                {formatLinkedinDisplay(p.linkedin)}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <LinkedinIcon size={iconSize} color={C.white} />
+                                <Link src={p.linkedin} style={styles.headerLink}>
+                                    {formatLinkedinDisplay(p.linkedin)}
+                                </Link>
+                            </View>
                         ) : null}
                     </View>
                     <View style={styles.headerRow}>
-                        {p.location ? <Text style={styles.headerLink}>{p.location}</Text> : null}
+                        {p.location ? (
+                            <View style={styles.contactItem}>
+                                <MapPinIcon size={iconSize} color={C.white} />
+                                <Text style={styles.headerLink}>{p.location}</Text>
+                            </View>
+                        ) : null}
                         {p.email ? (
-                            <Link src={`mailto:${p.email}`} style={styles.headerLink}>
-                                {p.email}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <MailIcon size={iconSize} color={C.white} />
+                                <Link src={`mailto:${p.email}`} style={styles.headerLink}>
+                                    {p.email}
+                                </Link>
+                            </View>
                         ) : null}
                         {p.phone ? (
-                            <Link src={`tel:${p.phone}`} style={styles.headerLink}>
-                                {p.phone}
-                            </Link>
+                            <View style={styles.contactItem}>
+                                <PhoneIcon size={iconSize} color={C.white} />
+                                <Link src={`tel:${p.phone}`} style={styles.headerLink}>
+                                    {p.phone}
+                                </Link>
+                            </View>
                         ) : null}
                     </View>
                 </View>
@@ -241,7 +273,7 @@ export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperP
                                     <Text style={styles.eduField}>{edu.field}</Text>
                                     <Text style={styles.eduMeta}>
                                         {edu.degree}
-                                        {edu.degree && edu.institution ? ' — ' : ''}
+                                        {edu.degree && edu.institution ? ' - ' : ''}
                                         {edu.institution}
                                     </Text>
                                     <Text style={styles.eduMeta}>
