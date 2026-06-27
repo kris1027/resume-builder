@@ -6,7 +6,94 @@ vi.mock('pdfjs-dist', () => ({
     getDocument: vi.fn(),
 }));
 
-import { detectTemplate, parseResumeFromText } from './pdf-parser';
+import {
+    buildResumeMetadata,
+    contactFromLinkUrls,
+    detectTemplate,
+    parseResumeFromText,
+    parseResumeMetadata,
+} from './pdf-parser';
+import type { ResumeData } from '@/types/form-types';
+
+describe('embedded resume metadata round-trip', () => {
+    const data: ResumeData = {
+        personalInfo: {
+            firstName: 'Ada',
+            lastName: 'Lovelace',
+            location: 'London, UK',
+            title: 'Engineer',
+            phone: '+441234567890',
+            email: 'ada@example.com',
+            website: '',
+            linkedin: '',
+            github: '',
+        },
+        experiences: [
+            {
+                company: 'Analytical Engine Co',
+                position: 'Programmer',
+                location: 'London',
+                startDate: '1843-01',
+                endDate: '',
+                current: true,
+                description: 'First algorithm',
+            },
+        ],
+        education: [],
+        skills: [{ name: 'Mathematics' }, { name: 'Logic' }],
+        languages: [{ language: 'English', proficiency: 'NATIVE' }],
+        interests: [{ name: 'Music' }],
+        gdprConsent: { enabled: true, companyName: 'Babbage Ltd' },
+    };
+
+    it('builds and parses back to equivalent form values including templateId', () => {
+        const raw = buildResumeMetadata('veterinary', data);
+        const parsed = parseResumeMetadata(raw);
+
+        expect(parsed).not.toBeNull();
+        expect(parsed?.templateId).toBe('veterinary');
+        expect(parsed?.personalInfo.firstName).toBe('Ada');
+        expect(parsed?.skills).toEqual(data.skills);
+        expect(parsed?.experiences[0].current).toBe(true);
+        expect(parsed?.gdprConsent).toEqual(data.gdprConsent);
+    });
+
+    it('returns null for undefined, non-JSON, or unknown-version input', () => {
+        expect(parseResumeMetadata(undefined)).toBeNull();
+        expect(parseResumeMetadata('Mathematics, Logic')).toBeNull();
+        expect(
+            parseResumeMetadata(JSON.stringify({ v: 99, data, templateId: 'default' })),
+        ).toBeNull();
+    });
+});
+
+describe('contactFromLinkUrls', () => {
+    it('categorizes link-annotation URLs into contact fields', () => {
+        const contact = contactFromLinkUrls([
+            'https://www.zaruszaj.pl/o-mnie',
+            'https://github.com/Kris1027',
+            'https://www.linkedin.com/in/krzysztof-obarzanek/',
+            'mailto:obarzanek.work@gmail.com',
+            'tel:+48 792 542 841',
+        ]);
+        expect(contact).toEqual({
+            website: 'https://www.zaruszaj.pl/o-mnie',
+            github: 'https://github.com/Kris1027',
+            linkedin: 'https://www.linkedin.com/in/krzysztof-obarzanek',
+            email: 'obarzanek.work@gmail.com',
+            phone: '+48792542841',
+        });
+    });
+
+    it('keeps the first URL of each kind and ignores unknown schemes', () => {
+        const contact = contactFromLinkUrls([
+            'https://example.com',
+            'https://other.com',
+            'javascript:alert(1)',
+        ]);
+        expect(contact).toEqual({ website: 'https://example.com' });
+    });
+});
 
 describe('detectTemplate', () => {
     it('detects developer template by // WORK EXPERIENCE', () => {
@@ -172,5 +259,61 @@ describe('parseResumeFromText — veterinary template', () => {
         const result = parseResumeFromText(vetText, 'veterinary');
         const skillNames = result.skills.map((s) => s.name);
         expect(skillNames).toContain('Surgery');
+    });
+});
+
+describe('parseResumeFromText — real-world PDF reconstruction quirks', () => {
+    // Lines as produced by reconstructing a real app-exported developer PDF:
+    // single-space separators, diacritics, an institution containing " in ", and
+    // a trailing GDPR consent clause.
+    const text = [
+        'Krzysztof Obarzanek',
+        'Frontend Developer',
+        'Kraków, Poland obarzanek.work@gmail.com +48 792 542 841',
+        '// WORK EXPERIENCE',
+        'M8B | Frontend Developer',
+        'February 2025 - February 2026 | Katowice, Poland',
+        '• Built things',
+        '// EDUCATION',
+        'Computer Science',
+        'University of DSW Ideis in Cracow',
+        '2026 - 2030',
+        '// TECH STACK',
+        'React TypeScript',
+        '// LANGUAGES',
+        'Polish NATIVE',
+        'English B2',
+        '// INTERESTS',
+        'Running',
+        'I hereby give my consent for my personal data to be processed',
+        'in accordance with Regulation (EU) 2016/679 (GDPR).',
+    ].join('\n');
+
+    it('parses location with diacritics', () => {
+        const result = parseResumeFromText(text, 'developer');
+        expect(result.personalInfo.location).toBe('Kraków, Poland');
+    });
+
+    it('keeps a single education entry when the institution contains " in "', () => {
+        const result = parseResumeFromText(text, 'developer');
+        expect(result.education).toHaveLength(1);
+        expect(result.education[0].field).toBe('Computer Science');
+        expect(result.education[0].institution).toBe('University of DSW Ideis in Cracow');
+        expect(result.education[0].startDate).toBe('2026-01');
+    });
+
+    it('parses single-space "language LEVEL" lines for every level', () => {
+        const result = parseResumeFromText(text, 'developer');
+        expect(result.languages).toEqual([
+            { language: 'Polish', proficiency: 'NATIVE' },
+            { language: 'English', proficiency: 'B2' },
+        ]);
+    });
+
+    it('excludes the GDPR consent clause from interests', () => {
+        const result = parseResumeFromText(text, 'developer');
+        const names = result.interests.map((i) => i.name.toLowerCase());
+        expect(result.interests.some((i) => /consent|gdpr|regulation/i.test(i.name))).toBe(false);
+        expect(names).toContain('running');
     });
 });

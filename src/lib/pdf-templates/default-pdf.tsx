@@ -4,6 +4,7 @@ import type { ResumeData } from '@/types/form-types';
 import { format } from 'date-fns';
 import { formatLinkedinDisplay } from '@/lib/utils';
 import { getPDFStrings, getDateFnsLocale, type PDFLang } from '@/lib/pdf-translations';
+import { buildResumeMetadata } from '@/lib/pdf-parser';
 import {
     GlobeIcon,
     LinkedinIcon,
@@ -197,6 +198,7 @@ export function DefaultPDF({ data, compactScale = 0, lang = 'en' }: DefaultPDFPr
             author={`${p.firstName} ${p.lastName}`}
             subject='Professional Resume'
             keywords={skills.map((s) => s.name).join(', ')}
+            creator={buildResumeMetadata('default', data)}
             language={lang}
         >
             <Page size='A4' style={styles.page}>

@@ -1,26 +1,89 @@
-import type { ResumeFormValues, LanguageLevelProps } from '@/types/form-types';
+import type { ResumeData, ResumeFormValues, LanguageLevelProps } from '@/types/form-types';
 import type { TemplateId } from '@/lib/template-ids';
-import i18n from '@/i18n/config';
 import { getPdfjs } from '@/lib/pdfjs-singleton';
 
 /**
- * Extract text content from a PDF file
+ * Versioned payload embedded in exported PDFs so they can be loaded back exactly.
+ * Stored in the PDF `creator` metadata field (keeps `keywords` human-readable).
+ */
+interface ResumeMetadataPayload {
+    v: 1;
+    templateId: TemplateId;
+    data: ResumeData;
+}
+
+/**
+ * Build the JSON string embedded in the PDF `creator` metadata field on export.
+ */
+export function buildResumeMetadata(templateId: TemplateId, data: ResumeData): string {
+    const payload: ResumeMetadataPayload = { v: 1, templateId, data };
+    return JSON.stringify(payload);
+}
+
+/**
+ * Parse the embedded metadata payload back into form values.
+ * Returns null when the string is absent, not our JSON, or an unknown version.
+ */
+export function parseResumeMetadata(raw: string | undefined): ResumeFormValues | null {
+    if (!raw) return null;
+    try {
+        const parsed = JSON.parse(raw) as Partial<ResumeMetadataPayload>;
+        if (parsed.v !== 1 || !parsed.data || !parsed.templateId) return null;
+        return {
+            ...parsed.data,
+            templateId: parsed.templateId,
+            gdprConsent: parsed.data.gdprConsent ?? { enabled: false, companyName: '' },
+        };
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Extract text content from a PDF file.
+ *
+ * pdfjs returns one text item per glyph run, not per visual line, so naively
+ * joining items shatters headers and entries (e.g. "// WORK EXPERIENCE" arrives
+ * as "//" and "WORK EXPERIENCE"). We reconstruct visual lines by grouping items
+ * on the same vertical position (transform[5]) and ordering them left-to-right,
+ * so the downstream line-based parser sees whole lines.
  */
 export async function extractTextFromPDF(file: File): Promise<string> {
     const pdfjsLib = await getPdfjs();
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-    let fullText = '';
+    const lines: string[] = [];
 
     for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
-        const pageText = textContent.items.map((item) => ('str' in item ? item.str : '')).join(' ');
-        fullText += pageText + '\n';
+
+        // Bucket items by their (rounded) Y position, tolerating sub-pixel drift.
+        const rows = new Map<number, { x: number; str: string }[]>();
+        for (const item of textContent.items) {
+            if (!('str' in item) || !item.str) continue;
+            const y = Math.round(item.transform[5]);
+            const key = [...rows.keys()].find((k) => Math.abs(k - y) <= 2) ?? y;
+            const row = rows.get(key) ?? [];
+            row.push({ x: item.transform[4], str: item.str });
+            rows.set(key, row);
+        }
+
+        // Top-to-bottom (PDF Y grows upward), each row left-to-right.
+        const sortedRows = [...rows.entries()].sort((a, b) => b[0] - a[0]);
+        for (const [, row] of sortedRows) {
+            row.sort((a, b) => a.x - b.x);
+            const line = row
+                .map((r) => r.str)
+                .join('')
+                .replace(/\s+/g, ' ')
+                .trim();
+            if (line) lines.push(line);
+        }
     }
 
-    return fullText;
+    return lines.join('\n');
 }
 
 /**
@@ -358,9 +421,10 @@ function parseHeaderInfo(lines: string[]): ResumeFormValues['personalInfo'] {
             }
         }
 
-        // Location (City, Country pattern)
+        // Location (City, Country pattern). Uses Unicode letter classes so names
+        // with diacritics (e.g. "Kraków") are matched, not just ASCII.
         const locationMatch = line.match(
-            /([A-Z][a-z]+(?:\s[A-Z][a-z]+)?),\s*([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)/,
+            /(\p{Lu}[\p{Ll}]+(?:\s\p{Lu}[\p{Ll}]+)?),\s*(\p{Lu}[\p{Ll}]+(?:\s\p{Lu}[\p{Ll}]+)?)/u,
         );
         if (locationMatch && !info.location) {
             info.location = locationMatch[0];
@@ -449,10 +513,11 @@ function parseEducation(lines: string[]): ResumeFormValues['education'] {
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
-        // Check for "Degree in Field" pattern (business template)
+        // Check for "Degree in Field" pattern (business template). Only treat this
+        // as the start of a NEW entry - otherwise an institution line that happens
+        // to contain " in " (e.g. "University of X in Cracow") is misread as a degree.
         const degreeFieldMatch = line.match(/^(.+?)\s+in\s+(.+)$/i);
-        if (degreeFieldMatch) {
-            if (currentEdu) education.push(currentEdu);
+        if (degreeFieldMatch && !currentEdu) {
             currentEdu = {
                 institution: '',
                 degree: degreeFieldMatch[1].trim(),
@@ -477,6 +542,19 @@ function parseEducation(lines: string[]): ResumeFormValues['education'] {
             continue;
         }
 
+        // Plain line within an open entry that still lacks an institution → institution
+        // (modern template renders field, then institution, then the year range).
+        if (
+            currentEdu &&
+            !currentEdu.institution &&
+            line.length > 0 &&
+            !line.match(/^\d{4}/) &&
+            !line.includes('|')
+        ) {
+            currentEdu.institution = line;
+            continue;
+        }
+
         // Check for "YYYY - YYYY | Institution" pattern
         const yearInstMatch = line.match(/(\d{4})\s*[-–]\s*(\d{4})\s*\|\s*(.+)/);
         if (yearInstMatch && currentEdu) {
@@ -493,8 +571,8 @@ function parseEducation(lines: string[]): ResumeFormValues['education'] {
         if (yearOnlyMatch && currentEdu) {
             currentEdu.startDate = `${yearOnlyMatch[1]}-01`;
             currentEdu.endDate = `${yearOnlyMatch[2]}-01`;
-            // Check if next line is institution
-            if (i + 1 < lines.length && !lines[i + 1].match(/^\d{4}/)) {
+            // Check if next line is institution (only if we don't already have one)
+            if (!currentEdu.institution && i + 1 < lines.length && !lines[i + 1].match(/^\d{4}/)) {
                 currentEdu.institution = lines[i + 1];
                 i++; // Skip next line
             }
@@ -544,34 +622,18 @@ function parseSkills(lines: string[]): ResumeFormValues['skills'] {
  */
 function parseLanguages(lines: string[]): ResumeFormValues['languages'] {
     const languages: ResumeFormValues['languages'] = [];
-    const validProficiencies: LanguageLevelProps[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'NATIVE'];
 
     for (const line of lines) {
-        // Pattern: "Language    Proficiency" or "Language - Proficiency"
-        const parts = line.split(/\s{2,}|\s*[-–]\s*|\t/);
-
-        if (parts.length >= 2) {
-            const language = parts[0].trim();
-            let proficiency = parts[parts.length - 1].trim().toUpperCase();
-
-            // Handle "Native" -> "NATIVE"
-            if (proficiency === 'NATIVE' || proficiency.toLowerCase() === 'native') {
-                proficiency = 'NATIVE';
-            }
-
-            if (validProficiencies.includes(proficiency as LanguageLevelProps)) {
+        // Match "<language> <LEVEL>" where the level ends the line. The separator
+        // may be a single space, multiple spaces, a tab, or a dash - real PDF text
+        // collapses to single spaces, so we cannot rely on a 2+ space gap.
+        const match = line.match(/^(.+?)[\s\-–\t]+(A1|A2|B1|B2|C1|C2|Native|NATIVE)$/i);
+        if (match) {
+            const language = match[1].replace(/[-–\s]+$/, '').trim();
+            if (language) {
                 languages.push({
                     language,
-                    proficiency: proficiency as LanguageLevelProps,
-                });
-            }
-        } else if (line.includes('Native') || line.includes('NATIVE')) {
-            // Handle "Polish Native" pattern
-            const langMatch = line.match(/^(\w+)\s+(?:Native|NATIVE)/);
-            if (langMatch) {
-                languages.push({
-                    language: langMatch[1],
-                    proficiency: 'NATIVE',
+                    proficiency: match[2].toUpperCase() as LanguageLevelProps,
                 });
             }
         }
@@ -588,6 +650,10 @@ function parseInterests(lines: string[]): ResumeFormValues['interests'] {
     const seenInterests = new Set<string>();
 
     for (const line of lines) {
+        // Skip the GDPR consent clause, which is rendered right after interests
+        // and would otherwise be split into bogus interest tags.
+        if (isConsentText(line)) continue;
+
         // Interests might be separated by bullets, spaces, or on separate lines
         const parts = line.split(/[•·,]|\s{2,}/);
 
@@ -688,6 +754,16 @@ function isNewEntry(line: string): boolean {
     );
 }
 
+/**
+ * Detect the GDPR consent clause rendered at the bottom of every template, so it
+ * isn't mistaken for resume content (e.g. interest tags).
+ */
+function isConsentText(line: string): boolean {
+    return /\b(consent|gdpr|regulation \(eu\)|hereby|recruitment process|personal data)\b/i.test(
+        line,
+    );
+}
+
 function isCommonWord(word: string): boolean {
     const common = [
         'the',
@@ -710,7 +786,8 @@ function isCommonWord(word: string): boolean {
 }
 
 /**
- * Extract resume data from PDF metadata (keywords field)
+ * Extract resume data from PDF metadata (creator field).
+ * Returns the embedded form values for PDFs exported by this app, else null.
  */
 export async function extractResumeDataFromMetadata(file: File): Promise<ResumeFormValues | null> {
     const pdfjsLib = await getPdfjs();
@@ -718,23 +795,63 @@ export async function extractResumeDataFromMetadata(file: File): Promise<ResumeF
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     const metadata = await pdf.getMetadata();
 
-    // Check if resume data is stored in keywords
     const info = metadata?.info as Record<string, unknown> | undefined;
-    if (info?.Keywords && typeof info.Keywords === 'string') {
-        try {
-            const resumeData = JSON.parse(info.Keywords);
-            return resumeData as ResumeFormValues;
-        } catch {
-            // Keywords is not valid JSON
+    const creator = typeof info?.Creator === 'string' ? info.Creator : undefined;
+    return parseResumeMetadata(creator);
+}
+
+type ContactLinks = Partial<
+    Pick<ResumeFormValues['personalInfo'], 'website' | 'github' | 'linkedin' | 'email' | 'phone'>
+>;
+
+/**
+ * Categorize PDF link-annotation URLs into contact fields. Templates render
+ * contact details as `<Link src={url}>`, so the annotation URL is the exact,
+ * authoritative value even when the visible text is only a username.
+ */
+export function contactFromLinkUrls(urls: string[]): ContactLinks {
+    const contact: ContactLinks = {};
+    for (const url of urls) {
+        if (!url) continue;
+        if (url.startsWith('mailto:')) {
+            contact.email ??= url.slice('mailto:'.length).trim();
+        } else if (url.startsWith('tel:')) {
+            contact.phone ??= url.slice('tel:'.length).replace(/\s/g, '');
+        } else if (/github\.com/i.test(url)) {
+            contact.github ??= url.replace(/\/$/, '');
+        } else if (/linkedin\.com/i.test(url)) {
+            contact.linkedin ??= url.replace(/\/$/, '');
+        } else if (/^https?:\/\//i.test(url)) {
+            contact.website ??= url.replace(/\/$/, '');
         }
     }
-
-    return null;
+    return contact;
 }
 
 /**
- * Main function to load resume from PDF file
- * Only works with PDFs created by this app (with embedded metadata)
+ * Extract contact details from a PDF's link annotations.
+ */
+export async function extractContactLinksFromPDF(file: File): Promise<ContactLinks> {
+    const pdfjsLib = await getPdfjs();
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+    const urls: string[] = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const annotations = (await page.getAnnotations()) as Array<Record<string, unknown>>;
+        for (const ann of annotations) {
+            const url = ann.url ?? ann.unsafeUrl;
+            if (typeof url === 'string') urls.push(url);
+        }
+    }
+    return contactFromLinkUrls(urls);
+}
+
+/**
+ * Main function to load resume from PDF file.
+ * Prefers the exact data embedded in app-exported PDFs; otherwise falls back to
+ * a best-effort heuristic parse of the visible text.
  */
 export async function loadResumeFromPDF(file: File): Promise<ResumeFormValues> {
     const metadataResult = await extractResumeDataFromMetadata(file);
@@ -742,6 +859,14 @@ export async function loadResumeFromPDF(file: File): Promise<ResumeFormValues> {
         return metadataResult;
     }
 
-    // PDF doesn't have embedded resume data - not created by this app
-    throw new Error(i18n.t('dialogs.pdfError.notFromApp'));
+    // No embedded data - fall back to parsing the rendered text, then overlay the
+    // exact contact details recovered from the PDF's link annotations.
+    const text = await extractTextFromPDF(file);
+    const templateId = detectTemplate(text);
+    const result = parseResumeFromText(text, templateId);
+
+    const links = await extractContactLinksFromPDF(file);
+    result.personalInfo = { ...result.personalInfo, ...links };
+
+    return result;
 }
