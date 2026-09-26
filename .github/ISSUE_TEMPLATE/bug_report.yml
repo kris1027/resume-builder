@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a problem with the resume builder.
+labels: [bug]
+body:
+    - type: markdown
+      attributes:
+          value: Please use sample or redacted resume data. Do not post personal details from a real CV.
+    - type: textarea
+      id: problem
+      attributes:
+          label: What happened?
+          description: Include what you expected to happen.
+          placeholder: The PDF download omitted the second page, but the preview showed both pages.
+      validations:
+          required: true
+    - type: textarea
+      id: steps
+      attributes:
+          label: Steps to reproduce
+          placeholder: |
+              1. Select a template.
+              2. Add sample experience entries.
+              3. Preview and export the PDF.
+      validations:
+          required: true
+    - type: input
+      id: template
+      attributes:
+          label: Template and mode
+          description: For example, Developer in multi-page mode. Leave blank if unrelated.
+    - type: input
+      id: environment
+      attributes:
+          label: Browser and device
+          description: For example, Firefox on macOS or Chrome on Android.
+    - type: textarea
+      id: evidence
+      attributes:
+          label: Additional context
+          description: Add redacted screenshots, errors, or console output if useful.

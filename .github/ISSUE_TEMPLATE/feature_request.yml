@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest an improvement to the resume builder.
+labels: [enhancement]
+body:
+    - type: textarea
+      id: need
+      attributes:
+          label: What problem would this solve?
+          description: Describe the task or limitation from a user's perspective.
+      validations:
+          required: true
+    - type: textarea
+      id: outcome
+      attributes:
+          label: What would a useful result look like?
+          description: A short example is enough; implementation details are optional.
+      validations:
+          required: true
+    - type: textarea
+      id: context
+      attributes:
+          label: Additional context
+          description: Add relevant templates, languages, or accessibility needs.
