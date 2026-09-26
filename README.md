@@ -4,6 +4,8 @@
 
 A modern, intuitive resume builder with multiple templates, dark mode, i18n, and PDF export.
 
+[Try the live app](https://cv-builder-five-eosin.vercel.app/) · [Development project](https://github.com/users/kris1027/projects/3)
+
 [![React][React-badge]][React-url]
 [![TypeScript][TypeScript-badge]][TypeScript-url]
 [![Vite][Vite-badge]][Vite-url]
@@ -14,6 +16,7 @@ A modern, intuitive resume builder with multiple templates, dark mode, i18n, and
 ## Table of Contents
 
 - [Features](#features)
+- [Template Previews](#template-previews)
 - [Built With](#built-with)
 - [Getting Started](#getting-started)
 - [How It Works](#how-it-works)
@@ -38,6 +41,14 @@ A modern, intuitive resume builder with multiple templates, dark mode, i18n, and
 - **SEO Optimized** — Open Graph, Twitter Cards, JSON-LD structured data, sitemap
 - **Real-time Validation** — Zod schema validation with i18n error messages
 - **No Sign-up Required** — Start building immediately, 100% free
+
+## Template Previews
+
+These sample resumes show the Default and Developer templates with fictional data. The builder also includes a Veterinary template.
+
+| Default                                                                                                                     | Developer                                                                                                                       |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| ![Default resume template preview with sample experience, education, and skills](src/assets/templates/default-template.png) | ![Developer resume template preview with sample experience, education, and skills](src/assets/templates/developer-template.png) |
 
 ## Built With
 
