@@ -11,35 +11,35 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 ## At a glance
 
-| #   | Feature                              | Phase        | Status   |
-| --- | ------------------------------------ | ------------ | -------- |
-| A   | Landing page                         | Existing     | existing |
-| B   | Template gallery & detail            | Existing     | existing |
-| C   | Builder form                         | Existing     | existing |
-| D   | Resume templates & preview           | Existing     | existing |
-| E   | PDF export                           | Existing     | existing |
-| F   | PDF import                           | Existing     | existing |
-| G   | Local persistence                    | Existing     | existing |
-| H   | i18n (EN/PL)                         | Existing     | existing |
-| I   | Theme (light/dark/system)            | Existing     | existing |
-| J   | PWA & offline                        | Existing     | existing |
-| K   | SEO                                  | Existing     | existing |
-| 1   | Coding standards & AGENTS.md         | Foundation   | done     |
-| 2   | Stack review                         | Foundation   | planned  |
-| 3   | Upgrades & replacements              | Foundation   | planned  |
-| 4   | Feature based folder structure       | Foundation   | planned  |
-| 5   | Performance budgets                  | Foundation   | planned  |
-| 6   | Design system refresh                | Foundation   | planned  |
-| 7   | Builder page split                   | Slice 1      | planned  |
-| 8   | Shared template model                | Slice 1      | planned  |
-| 9   | PDF import parser restructure        | Slice 1      | planned  |
-| 10  | Lazy load heavy engines              | Slice 2      | planned  |
-| 11  | Builder responsiveness               | Slice 2      | planned  |
-| 12  | Landing page refresh                 | Slice 3      | planned  |
-| 13  | Template gallery refresh             | Slice 3      | planned  |
-| 14  | Builder UI refresh                   | Slice 3      | planned  |
-| 15  | Preview & export UI refresh          | Slice 3      | planned  |
-| 16  | Accessibility & Lighthouse pass      | Slice 3      | planned  |
+| #   | Feature                         | Phase      | Status   |
+| --- | ------------------------------- | ---------- | -------- |
+| A   | Landing page                    | Existing   | existing |
+| B   | Template gallery & detail       | Existing   | existing |
+| C   | Builder form                    | Existing   | existing |
+| D   | Resume templates & preview      | Existing   | existing |
+| E   | PDF export                      | Existing   | existing |
+| F   | PDF import                      | Existing   | existing |
+| G   | Local persistence               | Existing   | existing |
+| H   | i18n (EN/PL)                    | Existing   | existing |
+| I   | Theme (light/dark/system)       | Existing   | existing |
+| J   | PWA & offline                   | Existing   | existing |
+| K   | SEO                             | Existing   | existing |
+| 1   | Coding standards & AGENTS.md    | Foundation | done     |
+| 2   | Stack review                    | Foundation | planned  |
+| 3   | Upgrades & replacements         | Foundation | planned  |
+| 4   | Feature based folder structure  | Foundation | planned  |
+| 5   | Performance budgets             | Foundation | planned  |
+| 6   | Design system refresh           | Foundation | planned  |
+| 7   | Builder page split              | Slice 1    | planned  |
+| 8   | Shared template model           | Slice 1    | planned  |
+| 9   | PDF import parser restructure   | Slice 1    | planned  |
+| 10  | Lazy load heavy engines         | Slice 2    | planned  |
+| 11  | Builder responsiveness          | Slice 2    | planned  |
+| 12  | Landing page refresh            | Slice 3    | planned  |
+| 13  | Template gallery refresh        | Slice 3    | planned  |
+| 14  | Builder UI refresh              | Slice 3    | planned  |
+| 15  | Preview & export UI refresh     | Slice 3    | planned  |
+| 16  | Accessibility & Lighthouse pass | Slice 3    | planned  |
 
 ## Already built
 
@@ -220,12 +220,12 @@ Out of scope for this pass, kept so the plan stays honest.
 
 **Feature lifecycle**:
 
-| State                           | Set by                           | The feature shows                                                                                  |
-| ------------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `planned` · needs a decision    | `/scope`                         | one box: `Design it (spec): /architect <feature>`                                                  |
-| `in-progress` (designed)        | **`/architect` at spec capture** | `Design it` ticked; spec linked; `Build it: /develop <feature>` + **2 to 5 milestones**            |
-| `in-progress` (building)        | `/develop`                       | milestone sub boxes tick one by one; code pointer filled                                           |
-| `done`                          | **you, when you decide it is**   | boxes you ran ticked; at `Prototype` the suggested point to call it done is right after `/develop` |
+| State                        | Set by                           | The feature shows                                                                                  |
+| ---------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `planned` · needs a decision | `/scope`                         | one box: `Design it (spec): /architect <feature>`                                                  |
+| `in-progress` (designed)     | **`/architect` at spec capture** | `Design it` ticked; spec linked; `Build it: /develop <feature>` + **2 to 5 milestones**            |
+| `in-progress` (building)     | `/develop`                       | milestone sub boxes tick one by one; code pointer filled                                           |
+| `done`                       | **you, when you decide it is**   | boxes you ran ticked; at `Prototype` the suggested point to call it done is right after `/develop` |
 
 - **Next step** = the first unticked box (always a command or a tracked milestone).
 - **needs a decision** = run `/architect` first; otherwise straight to `/develop` (or `/audit` for standards & tooling). The tag drops once the spec is captured.
