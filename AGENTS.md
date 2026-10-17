@@ -1,0 +1,62 @@
+# Resume Builder
+
+Free, no sign up resume builder (EN/PL). The user fills a form, picks one of three templates, and exports or imports a PDF. Client only SPA, no backend; everything lives in the browser.
+
+## Stack
+
+- **Language / Runtime**: TypeScript 5.8 (strict), React 19, Node 22 (`.nvmrc`)
+- **Framework**: Vite 7 SPA, TanStack Router (file routes in `src/routes/`, `src/routeTree.gen.ts` is generated, never edit it)
+- **Key dependencies**: TanStack Form + Zod 4, Tailwind 4 + shadcn style Radix primitives (`src/components/ui/`), `@react-pdf/renderer` (render) + `pdfjs-dist` (parse), react-i18next, motion, vite-plugin-pwa
+- **Package manager**: pnpm 10
+- **Hosting**: Vercel (`vercel.json`: SPA rewrite plus CSP; keep it in sync with the CSP in `vite.config.ts`)
+
+## Build approach
+
+**Tracer Bullet**: each change lands end to end and working, so the app stays shippable after every step.
+
+## Commands
+
+```bash
+pnpm install          # Install (copy .env.example to .env for VITE_SITE_URL)
+pnpm dev              # Dev server on http://localhost:5173
+pnpm build            # tsc -b plus vite build (the only typecheck)
+pnpm test             # Vitest once; pnpm test:coverage enforces a 50% floor
+pnpm lint             # ESLint only
+pnpm format           # Prettier; CI runs format:check, lint, test, build
+pnpm pre-commit       # All of the above; run before pushing
+```
+
+## Specs
+
+Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`. Scope lives in `docs/scope/scope.md`.
+
+## Rules
+
+- Formatting: Prettier (`.prettierrc`): single quotes (JSX too), tabWidth 4, printWidth 100, Tailwind classes auto sorted.
+- Files are `kebab-case`; import from `src` through the `@/` alias; use `import type` for types (`verbatimModuleSyntax` is on). No `any`.
+- Components are arrow functions with a `ComponentNameProps` type; callbacks `on*`, handlers `handle*`.
+- Validation: `src/schemas/resume-schema.ts` is the single source of truth. Zod messages are i18n keys (`validation.*`), never raw text, and field errors show only after `isTouched`. Required: first name, last name, email (`.email()`).
+- i18n: every user facing string goes through `t()`, and every new key lands in both `src/locales/en` and `src/locales/pl`. The PDF renderer cannot use `t()`; see the PDF context file.
+- Templates: `developer`, `default`, `veterinary` (`src/lib/template-ids.ts`). Each exists twice: an HTML version in `src/components/templates/` (gallery card previews only) and a PDF version in `src/lib/pdf-templates/` (preview, detail page, export). A new resume section must land in all three templates, in both versions, plus the PDF import parser.
+- Templates are always white and never animated; dark mode and motion apply only to the surrounding UI. Language levels use the European framework: A1 to C2 plus `NATIVE`.
+- GDPR clause, when enabled, renders at the bottom of every template: `cv.gdprConsent` with a company name, `cv.gdprConsentGeneric` without.
+- Animations: respect `prefers-reduced-motion`, parallax only on decorative layers (never text), `viewport: { once: true }` on every `whileInView` (shared variants in `src/lib/animation-variants.ts`).
+- Storage: always go through `safeStorage` (`src/lib/storage.ts`, falls back to memory). Keys: `resumeData`, `resumeData_backup` (manual save, survives reset), `resumeData_lastSaved`, plus `theme`, `language`, `privacyNoticeAccepted`, `pwaInstallDismissed`. Breaking the saved shape is allowed this pass.
+- Template choice travels as `?templateId=` on `/builder` and `/preview`; the gallery detail page uses the path `/templates/$templateId`.
+- Tests: co-located `*.test.ts(x)`, render via `@/test/test-utils` (real EN translations, so missing keys fail), `it('should ... when ...')`, query by role, label or text.
+
+## Git
+
+- Branch from `main` with a prefix: `feat/`, `fix/`, `chore/`, `docs/`; PR back into `main`.
+- Commits: Conventional Commits style (`fix(pdf): ...`).
+
+## Issues and domain docs
+
+- Issues: GitHub Issues via `gh`, see `docs/agents/issue-tracker.md`; labels in `docs/agents/triage-labels.md`.
+- Domain: `CONTEXT.md` plus `docs/adr/` at the root when they exist, see `docs/agents/domain.md`.
+
+## Context files
+
+- [src/lib/pdf-templates/AGENTS.md](src/lib/pdf-templates/AGENTS.md) (PDF render, export, preview fitting and import round trip)
+
+_Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._
