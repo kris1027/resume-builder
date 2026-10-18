@@ -14,9 +14,7 @@ import { ArrowLeft, Edit } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageToggle } from '@/components/language-toggle';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'motion/react';
-import { useParallax } from '@/hooks/use-parallax';
-import { GeometricShapes } from '@/components/geometric-shapes';
+import { ParallaxBackground } from '@/components/parallax-background';
 import { PDFViewer } from '@react-pdf/renderer';
 import { DeveloperPDF } from '@/lib/pdf-templates/developer-pdf';
 import { DefaultPDF } from '@/lib/pdf-templates/default-pdf';
@@ -26,10 +24,6 @@ export function TemplatePage() {
     const { t, i18n } = useTranslation();
     const { templateId } = useParams({ from: '/templates_/$templateId' });
     const isPolish = i18n.language === 'pl';
-
-    const { ref: bgGradientRef, y: bgGradientY } = useParallax({ yRange: 30 });
-    const { ref: bgDotsRef, y: bgDotsY } = useParallax({ yRange: 15 });
-    const { ref: bgShapesRef, y: bgShapesY } = useParallax({ yRange: 40 });
 
     const getTemplateName = () => {
         switch (templateId) {
@@ -93,32 +87,7 @@ export function TemplatePage() {
 
     return (
         <div className='relative flex h-screen flex-col overflow-hidden'>
-            {/* Background gradient mesh */}
-            <motion.div
-                ref={bgGradientRef}
-                style={{ y: bgGradientY }}
-                className='animate-gradient-shift pointer-events-none absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-violet-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/80'
-            />
-
-            {/* Dot grid pattern */}
-            <motion.div
-                ref={bgDotsRef}
-                style={{
-                    y: bgDotsY,
-                    backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
-                    backgroundSize: '24px 24px',
-                }}
-                className='pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.04]'
-                aria-hidden='true'
-            />
-
-            <motion.div
-                ref={bgShapesRef}
-                style={{ y: bgShapesY }}
-                className='pointer-events-none absolute inset-0'
-            >
-                <GeometricShapes />
-            </motion.div>
+            <ParallaxBackground />
 
             {/* Navigation Bar */}
             <div className='relative z-10 shrink-0 border-b border-white/20 bg-white/80 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-slate-900/80'>
