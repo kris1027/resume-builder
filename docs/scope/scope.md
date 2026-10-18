@@ -26,7 +26,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | K   | SEO                             | Existing   | existing    |
 | 1   | Coding standards & AGENTS.md    | Foundation | done        |
 | 2   | Stack review                    | Foundation | in-progress |
-| 3   | Upgrades & replacements         | Foundation | in-progress |
+| 3   | Upgrades & replacements         | Foundation | done        |
 | 17  | Unified radix-ui package        | Foundation | planned     |
 | 18  | Intl dates instead of date-fns  | Foundation | planned     |
 | 19  | Single CSP source               | Foundation | planned     |
@@ -108,15 +108,15 @@ spec [0001](../specs/0001-stack-review/index.md)
 
 - [x] Design it (spec): `/architect stack review`
 
-### 3. Upgrades & replacements · in-progress
+### 3. Upgrades & replacements · done
 
 Apply the verdicts from the stack review one layer at a time, so tests and build stay green after each.
 **Done when:** every "upgrade" verdict is applied, lint, tests, typecheck and build pass, and the app runs with no console errors.
 spec [0001](../specs/0001-stack-review/index.md) (build plan steps 1 to 7 and 12)
 code in `package.json`, `pnpm-workspace.yaml`, `vite.config.ts`, `eslint.config.js`, `src/components/icons/`
 
-- [ ] Build it: `/develop upgrades & replacements`
-    - [ ] Runtime, pnpm 12 and dead code removal (step 1), AC-1, AC-9
+- [x] Build it: `/develop upgrades & replacements`
+    - [x] Runtime, pnpm 12 and dead code removal (step 1), AC-1, AC-9
     - [x] Toolchain: minors, TS 6, Vite 8, Vitest 5, ESLint 10 (steps 2 to 6), AC-1, AC-2, AC-4
     - [x] App library majors: i18next, motion 13, lucide 1, pdfjs 6 (step 7), AC-2, AC-3, AC-4, AC-6
     - [x] Final pass over the full check matrix (step 12), AC-2, AC-3, AC-4, AC-10
