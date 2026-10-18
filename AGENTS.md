@@ -4,10 +4,10 @@ Free, no sign up resume builder (EN/PL). The user fills a form, picks one of thr
 
 ## Stack
 
-- **Language / Runtime**: TypeScript 5.8 (strict), React 19, Node 22 (`.nvmrc`)
-- **Framework**: Vite 7 SPA, TanStack Router (file routes in `src/routes/`, `src/routeTree.gen.ts` is generated, never edit it)
+- **Language / Runtime**: TypeScript 6 (strict), React 19, Node 24 (`.nvmrc`)
+- **Framework**: Vite 8 SPA, TanStack Router (file routes in `src/routes/`, `src/routeTree.gen.ts` is generated, never edit it)
 - **Key dependencies**: TanStack Form + Zod 4, Tailwind 4 + shadcn style Radix primitives (`src/components/ui/`), `@react-pdf/renderer` (render) + `pdfjs-dist` (parse), react-i18next, motion, vite-plugin-pwa
-- **Package manager**: pnpm 10
+- **Package manager**: pnpm 12 (`packageManager` in `package.json`)
 - **Hosting**: Vercel (`vercel.json`: SPA rewrite plus CSP; keep it in sync with the CSP in `vite.config.ts`)
 
 ## Build approach
