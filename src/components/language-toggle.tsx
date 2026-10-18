@@ -7,7 +7,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const languages = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -16,23 +16,9 @@ const languages = [
 
 export const LanguageToggle = () => {
     const { t, i18n } = useTranslation();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
     useEffect(() => {
         document.documentElement.lang = i18n.language;
     }, [i18n.language]);
-
-    if (!mounted) {
-        return (
-            <Button variant='outline' size='icon' className='h-9 w-9'>
-                <div className='h-4 w-4' />
-            </Button>
-        );
-    }
 
     const currentLanguage = languages.find((l) => l.code === i18n.language) || languages[0];
 

@@ -32,10 +32,8 @@ describe('generateResumeFilename', () => {
 describe('countPdfPages', () => {
     function makeGetDocument(numPages: number) {
         return vi.fn().mockReturnValue({
-            promise: Promise.resolve({
-                numPages,
-                destroy: vi.fn().mockResolvedValue(undefined),
-            }),
+            promise: Promise.resolve({ numPages }),
+            destroy: vi.fn().mockResolvedValue(undefined),
         });
     }
 
@@ -52,6 +50,7 @@ describe('countPdfPages', () => {
         vi.mocked(getPdfjs).mockResolvedValue({
             getDocument: vi.fn().mockReturnValue({
                 promise: Promise.reject(new Error('parse error')),
+                destroy: vi.fn().mockResolvedValue(undefined),
             }),
         } as never);
 

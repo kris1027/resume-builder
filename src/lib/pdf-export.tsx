@@ -50,11 +50,11 @@ export async function countPdfPages(blob: Blob): Promise<number> {
     const loadingTask = getDocument({ data: new Uint8Array(buf) });
     try {
         const pdfDoc = await loadingTask.promise;
-        const numPages = pdfDoc.numPages;
-        await pdfDoc.destroy();
-        return numPages;
+        return pdfDoc.numPages;
     } catch {
         return 1;
+    } finally {
+        await loadingTask.destroy();
     }
 }
 

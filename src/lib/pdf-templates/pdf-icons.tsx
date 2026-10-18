@@ -5,7 +5,7 @@ import { Svg, Path, Circle, Rect } from '@react-pdf/renderer';
  *
  * lucide-react components cannot render inside react-pdf (different renderer),
  * so these mirror the same 24x24 stroke icons used by the on-screen templates
- * (see src/components/templates/*). Keep path data in sync with lucide if the
+ * (see src/components/templates/* and src/components/icons/brand-icons.tsx). Keep path data in sync with lucide if the
  * UI icons change.
  */
 interface PDFIconProps {

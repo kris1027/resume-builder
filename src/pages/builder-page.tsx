@@ -62,9 +62,9 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
     const search = useSearch({ from: '/builder' }) as { templateId?: string };
     const shouldReduceMotion = useReducedMotion();
 
-    const bgGradient = useParallax({ yRange: 30 });
-    const bgDots = useParallax({ yRange: 15 });
-    const bgShapes = useParallax({ yRange: 40 });
+    const { ref: bgGradientRef, y: bgGradientY } = useParallax({ yRange: 30 });
+    const { ref: bgDotsRef, y: bgDotsY } = useParallax({ yRange: 15 });
+    const { ref: bgShapesRef, y: bgShapesY } = useParallax({ yRange: 40 });
 
     const [isSaving, setIsSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -458,16 +458,16 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
         <div className='relative min-h-screen overflow-hidden'>
             {/* Background gradient mesh */}
             <motion.div
-                ref={bgGradient.ref}
-                style={{ y: bgGradient.y }}
+                ref={bgGradientRef}
+                style={{ y: bgGradientY }}
                 className='animate-gradient-shift absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-violet-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/80'
             />
 
             {/* Dot grid pattern */}
             <motion.div
-                ref={bgDots.ref}
+                ref={bgDotsRef}
                 style={{
-                    y: bgDots.y,
+                    y: bgDotsY,
                     backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
                     backgroundSize: '24px 24px',
                 }}
@@ -477,8 +477,8 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
 
             {/* Geometric shapes */}
             <motion.div
-                ref={bgShapes.ref}
-                style={{ y: bgShapes.y }}
+                ref={bgShapesRef}
+                style={{ y: bgShapesY }}
                 className='pointer-events-none absolute inset-0 overflow-hidden'
                 aria-hidden='true'
             >

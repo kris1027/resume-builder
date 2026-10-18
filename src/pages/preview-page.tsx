@@ -74,6 +74,29 @@ async function findMinCompactScale(
     return hi;
 }
 
+const loadStoredResume = (): ResumeData | null => {
+    const storedData = safeStorage.getItem('resumeData');
+    if (storedData) {
+        let parsedData;
+        try {
+            parsedData = JSON.parse(storedData);
+        } catch {
+            if (import.meta.env.DEV) console.warn('Failed to parse stored resume data');
+            return null;
+        }
+        return {
+            personalInfo: parsedData.personalInfo,
+            experiences: parsedData.experiences || [],
+            education: parsedData.education || [],
+            skills: parsedData.skills || [],
+            languages: parsedData.languages || [],
+            interests: parsedData.interests || [],
+            gdprConsent: parsedData.gdprConsent,
+        };
+    }
+    return null;
+};
+
 export const PreviewPage = () => {
     const { t, i18n } = useTranslation();
     const search = useSearch({ from: '/preview' }) as { templateId?: string };
@@ -83,7 +106,7 @@ export const PreviewPage = () => {
         : 'developer';
     const lang = normalizePDFLang(i18n.language);
 
-    const [resumeData, setResumeData] = useState<ResumeData | null>(null);
+    const [resumeData] = useState(loadStoredResume);
     const [isExporting, setIsExporting] = useState(false);
     const [exportError, setExportError] = useState<string | null>(null);
     const [isMultiPage, setIsMultiPage] = useState(false);
@@ -92,38 +115,20 @@ export const PreviewPage = () => {
     const [useCompact, setUseCompact] = useState(false);
     const [isPreviewReady, setIsPreviewReady] = useState(false);
 
-    useEffect(() => {
-        const storedData = safeStorage.getItem('resumeData');
-        if (storedData) {
-            let parsedData;
-            try {
-                parsedData = JSON.parse(storedData);
-            } catch {
-                if (import.meta.env.DEV) console.warn('Failed to parse stored resume data');
-                return;
-            }
-            const transformedData: ResumeData = {
-                personalInfo: parsedData.personalInfo,
-                experiences: parsedData.experiences || [],
-                education: parsedData.education || [],
-                skills: parsedData.skills || [],
-                languages: parsedData.languages || [],
-                interests: parsedData.interests || [],
-                gdprConsent: parsedData.gdprConsent,
-            };
-            setResumeData(transformedData);
-        }
-    }, []);
-
-    // Detect page count, then binary-search for optimal compact scale in background
-    useEffect(() => {
-        if (!resumeData) return;
-
-        // Reset all compact-related state so stale values don't linger if templateId changes
+    // Reset all compact-related state during render so stale values don't linger if templateId changes
+    const fitKey = `${templateId}:${lang}`;
+    const [prevFitKey, setPrevFitKey] = useState(fitKey);
+    if (fitKey !== prevFitKey) {
+        setPrevFitKey(fitKey);
         setIsPreviewReady(false);
         setIsMultiPage(false);
         setOptimalScale(null);
         setUseCompact(false);
+    }
+
+    // Detect page count, then binary-search for optimal compact scale in background
+    useEffect(() => {
+        if (!resumeData) return;
 
         let cancelled = false;
 

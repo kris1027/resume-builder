@@ -27,9 +27,9 @@ export function TemplatePage() {
     const { templateId } = useParams({ from: '/templates_/$templateId' });
     const isPolish = i18n.language === 'pl';
 
-    const bgGradient = useParallax({ yRange: 30 });
-    const bgDots = useParallax({ yRange: 15 });
-    const bgShapes = useParallax({ yRange: 40 });
+    const { ref: bgGradientRef, y: bgGradientY } = useParallax({ yRange: 30 });
+    const { ref: bgDotsRef, y: bgDotsY } = useParallax({ yRange: 15 });
+    const { ref: bgShapesRef, y: bgShapesY } = useParallax({ yRange: 40 });
 
     const getTemplateName = () => {
         switch (templateId) {
@@ -95,16 +95,16 @@ export function TemplatePage() {
         <div className='relative flex h-screen flex-col overflow-hidden'>
             {/* Background gradient mesh */}
             <motion.div
-                ref={bgGradient.ref}
-                style={{ y: bgGradient.y }}
+                ref={bgGradientRef}
+                style={{ y: bgGradientY }}
                 className='animate-gradient-shift pointer-events-none absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-violet-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/80'
             />
 
             {/* Dot grid pattern */}
             <motion.div
-                ref={bgDots.ref}
+                ref={bgDotsRef}
                 style={{
-                    y: bgDots.y,
+                    y: bgDotsY,
                     backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
                     backgroundSize: '24px 24px',
                 }}
@@ -113,8 +113,8 @@ export function TemplatePage() {
             />
 
             <motion.div
-                ref={bgShapes.ref}
-                style={{ y: bgShapes.y }}
+                ref={bgShapesRef}
+                style={{ y: bgShapesY }}
                 className='pointer-events-none absolute inset-0'
             >
                 <GeometricShapes />

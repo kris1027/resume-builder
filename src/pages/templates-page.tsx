@@ -15,7 +15,7 @@ import { DefaultPreview } from '@/components/template-previews/default-preview';
 import { VeterinaryPreview } from '@/components/template-previews/veterinary-preview';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageToggle } from '@/components/language-toggle';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     AlertDialog,
@@ -65,24 +65,15 @@ export const TemplatesPage = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const shouldReduceMotion = useReducedMotion();
-    const [hasSavedData, setHasSavedData] = useState(false);
-    const [lastSaved, setLastSaved] = useState<Date | null>(null);
-
-    const bgGradient = useParallax({ yRange: 30 });
-    const bgDots = useParallax({ yRange: 15 });
-    const bgShapes = useParallax({ yRange: 40 });
-
-    useEffect(() => {
-        const savedData = safeStorage.getItem('resumeData');
+    const [hasSavedData, setHasSavedData] = useState(() => !!safeStorage.getItem('resumeData'));
+    const [lastSaved, setLastSaved] = useState<Date | null>(() => {
         const savedTime = safeStorage.getItem('resumeData_lastSaved');
+        return safeStorage.getItem('resumeData') && savedTime ? new Date(savedTime) : null;
+    });
 
-        if (savedData) {
-            setHasSavedData(true);
-            if (savedTime) {
-                setLastSaved(new Date(savedTime));
-            }
-        }
-    }, []);
+    const { ref: bgGradientRef, y: bgGradientY } = useParallax({ yRange: 30 });
+    const { ref: bgDotsRef, y: bgDotsY } = useParallax({ yRange: 15 });
+    const { ref: bgShapesRef, y: bgShapesY } = useParallax({ yRange: 40 });
 
     const handleReset = () => {
         safeStorage.removeItem('resumeData');
@@ -119,16 +110,16 @@ export const TemplatesPage = () => {
         <div className='relative min-h-screen overflow-hidden'>
             {/* Background gradient mesh */}
             <motion.div
-                ref={bgGradient.ref}
-                style={{ y: bgGradient.y }}
+                ref={bgGradientRef}
+                style={{ y: bgGradientY }}
                 className='animate-gradient-shift absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-violet-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/80'
             />
 
             {/* Dot grid pattern */}
             <motion.div
-                ref={bgDots.ref}
+                ref={bgDotsRef}
                 style={{
-                    y: bgDots.y,
+                    y: bgDotsY,
                     backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
                     backgroundSize: '24px 24px',
                 }}
@@ -136,7 +127,7 @@ export const TemplatesPage = () => {
                 aria-hidden='true'
             />
 
-            <motion.div ref={bgShapes.ref} style={{ y: bgShapes.y }}>
+            <motion.div ref={bgShapesRef} style={{ y: bgShapesY }}>
                 <GeometricShapes />
             </motion.div>
 

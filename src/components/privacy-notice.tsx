@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,14 +8,7 @@ const STORAGE_KEY = 'privacyNoticeAccepted';
 
 export const PrivacyNotice = () => {
     const { t } = useTranslation();
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-        const accepted = safeStorage.getItem(STORAGE_KEY);
-        if (!accepted) {
-            setIsVisible(true);
-        }
-    }, []);
+    const [isVisible, setIsVisible] = useState(() => !safeStorage.getItem(STORAGE_KEY));
 
     const handleAccept = () => {
         safeStorage.setItem(STORAGE_KEY, 'true');
