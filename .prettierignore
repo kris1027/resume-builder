@@ -1,3 +1,6 @@
 dist
 pnpm-lock.yaml
 src/routeTree.gen.ts
+.agents
+skills-lock.json
+public/pdf.worker.min.mjs

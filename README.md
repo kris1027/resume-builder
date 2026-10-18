@@ -92,8 +92,8 @@ These sample resumes show the Default and Developer templates with fictional dat
 
 ### Prerequisites
 
-- Node.js 20.19+ (see `.nvmrc` for pinned version)
-- pnpm package manager
+- Node.js 24+ (see `.nvmrc` for pinned version)
+- pnpm 12+ (pinned via `packageManager` in `package.json`)
 
 ### Installation
 

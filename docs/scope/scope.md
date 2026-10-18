@@ -11,35 +11,39 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 ## At a glance
 
-| #   | Feature                         | Phase      | Status   |
-| --- | ------------------------------- | ---------- | -------- |
-| A   | Landing page                    | Existing   | existing |
-| B   | Template gallery & detail       | Existing   | existing |
-| C   | Builder form                    | Existing   | existing |
-| D   | Resume templates & preview      | Existing   | existing |
-| E   | PDF export                      | Existing   | existing |
-| F   | PDF import                      | Existing   | existing |
-| G   | Local persistence               | Existing   | existing |
-| H   | i18n (EN/PL)                    | Existing   | existing |
-| I   | Theme (light/dark/system)       | Existing   | existing |
-| J   | PWA & offline                   | Existing   | existing |
-| K   | SEO                             | Existing   | existing |
-| 1   | Coding standards & AGENTS.md    | Foundation | done     |
-| 2   | Stack review                    | Foundation | planned  |
-| 3   | Upgrades & replacements         | Foundation | planned  |
-| 4   | Feature based folder structure  | Foundation | planned  |
-| 5   | Performance budgets             | Foundation | planned  |
-| 6   | Design system refresh           | Foundation | planned  |
-| 7   | Builder page split              | Slice 1    | planned  |
-| 8   | Shared template model           | Slice 1    | planned  |
-| 9   | PDF import parser restructure   | Slice 1    | planned  |
-| 10  | Lazy load heavy engines         | Slice 2    | planned  |
-| 11  | Builder responsiveness          | Slice 2    | planned  |
-| 12  | Landing page refresh            | Slice 3    | planned  |
-| 13  | Template gallery refresh        | Slice 3    | planned  |
-| 14  | Builder UI refresh              | Slice 3    | planned  |
-| 15  | Preview & export UI refresh     | Slice 3    | planned  |
-| 16  | Accessibility & Lighthouse pass | Slice 3    | planned  |
+| #   | Feature                         | Phase      | Status      |
+| --- | ------------------------------- | ---------- | ----------- |
+| A   | Landing page                    | Existing   | existing    |
+| B   | Template gallery & detail       | Existing   | existing    |
+| C   | Builder form                    | Existing   | existing    |
+| D   | Resume templates & preview      | Existing   | existing    |
+| E   | PDF export                      | Existing   | existing    |
+| F   | PDF import                      | Existing   | existing    |
+| G   | Local persistence               | Existing   | existing    |
+| H   | i18n (EN/PL)                    | Existing   | existing    |
+| I   | Theme (light/dark/system)       | Existing   | existing    |
+| J   | PWA & offline                   | Existing   | existing    |
+| K   | SEO                             | Existing   | existing    |
+| 1   | Coding standards & AGENTS.md    | Foundation | done        |
+| 2   | Stack review                    | Foundation | in-progress |
+| 3   | Upgrades & replacements         | Foundation | done        |
+| 17  | Unified radix-ui package        | Foundation | planned     |
+| 18  | Intl dates instead of date-fns  | Foundation | planned     |
+| 19  | Single CSP source               | Foundation | planned     |
+| 20  | React Compiler                  | Foundation | planned     |
+| 4   | Feature based folder structure  | Foundation | planned     |
+| 5   | Performance budgets             | Foundation | planned     |
+| 6   | Design system refresh           | Foundation | planned     |
+| 7   | Builder page split              | Slice 1    | planned     |
+| 8   | Shared template model           | Slice 1    | planned     |
+| 9   | PDF import parser restructure   | Slice 1    | planned     |
+| 10  | Lazy load heavy engines         | Slice 2    | planned     |
+| 11  | Builder responsiveness          | Slice 2    | planned     |
+| 12  | Landing page refresh            | Slice 3    | planned     |
+| 13  | Template gallery refresh        | Slice 3    | planned     |
+| 14  | Builder UI refresh              | Slice 3    | planned     |
+| 15  | Preview & export UI refresh     | Slice 3    | planned     |
+| 16  | Accessibility & Lighthouse pass | Slice 3    | planned     |
 
 ## Already built
 
@@ -96,19 +100,58 @@ Capture the real conventions (CLAUDE.md rules, folder layout, testing, i18n, tem
 
 - [x] Capture conventions: `/audit`
 
-### 2. Stack review · needs a decision
+### 2. Stack review · in-progress
 
 Check every layer (build, router, forms, validation, UI primitives, animation, PDF render, PDF parse, dates, lint/format, tests, PWA) against current best practice and decide keep, upgrade, or replace for each.
 **Done when:** a spec records a verdict and reason per layer, and every replacement is enrolled here as its own row.
+spec [0001](../specs/0001-stack-review/index.md)
 
-- [ ] Design it (spec): `/architect stack review`
+- [x] Design it (spec): `/architect stack review`
 
-### 3. Upgrades & replacements
+### 3. Upgrades & replacements · done
 
 Apply the verdicts from the stack review one layer at a time, so tests and build stay green after each.
 **Done when:** every "upgrade" verdict is applied, lint, tests, typecheck and build pass, and the app runs with no console errors.
+spec [0001](../specs/0001-stack-review/index.md) (build plan steps 1 to 7 and 12)
+code in `package.json`, `pnpm-workspace.yaml`, `vite.config.ts`, `eslint.config.js`, `src/components/icons/`
 
-- [ ] Build it: `/develop upgrades & replacements`
+- [x] Build it: `/develop upgrades & replacements`
+    - [x] Runtime, pnpm 12 and dead code removal (step 1), AC-1, AC-9
+    - [x] Toolchain: minors, TS 6, Vite 8, Vitest 5, ESLint 10 (steps 2 to 6), AC-1, AC-2, AC-4
+    - [x] App library majors: i18next, motion 13, lucide 1, pdfjs 6 (step 7), AC-2, AC-3, AC-4, AC-6
+    - [x] Final pass over the full check matrix (step 12), AC-2, AC-3, AC-4, AC-10
+
+### 17. Unified radix-ui package · from spec 0001
+
+Swap the seven `@radix-ui/react-*` packages for the single `radix-ui` package; same components, only import paths change.
+**Done when:** no `@radix-ui/react-*` entry is left in `package.json` and every dialog, select, popover and menu works as before.
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 8)
+
+- [ ] Build it: `/develop unified radix-ui package`
+
+### 18. Intl dates instead of date-fns · from spec 0001
+
+Format month and year with the browser's `Intl.DateTimeFormat` in the app and all three PDF templates, then drop `date-fns`.
+**Done when:** a pinning test shows identical EN and PL output for all 12 months, and `date-fns` is gone.
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 9)
+
+- [ ] Build it: `/develop intl dates`
+
+### 19. Single CSP source · from spec 0001
+
+`vite.config.ts` reads the CSP from `vercel.json` instead of keeping its own copy.
+**Done when:** the CSP string appears once in the repo, and the meta tag and deployed header match on a preview deployment.
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 10)
+
+- [ ] Build it: `/develop single csp source`
+
+### 20. React Compiler · from spec 0001
+
+Turn on the React Compiler in the build and the tests, with the React hooks v7 lint rules.
+**Done when:** the compiler runs in build and tests, lint reports compiler rules, and the builder behaves as before.
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 11)
+
+- [ ] Build it: `/develop react compiler`
 
 ### 4. Feature based folder structure · needs a decision
 

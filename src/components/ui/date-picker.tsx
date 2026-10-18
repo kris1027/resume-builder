@@ -71,12 +71,14 @@ export function DatePicker({
     const [isOpen, setIsOpen] = React.useState(false);
 
     // Update selected month/year when value changes
-    React.useEffect(() => {
+    const [prevDateValue, setPrevDateValue] = React.useState(dateValue);
+    if (dateValue?.getTime() !== prevDateValue?.getTime()) {
+        setPrevDateValue(dateValue);
         if (dateValue) {
             setSelectedMonth(dateValue.getMonth());
             setSelectedYear(dateValue.getFullYear());
         }
-    }, [dateValue]);
+    }
 
     const handleMonthSelect = (month: number) => {
         const newDate = new Date(Date.UTC(selectedYear, month, 1));

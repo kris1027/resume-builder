@@ -7,25 +7,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useEffect, useState } from 'react';
 
 export const ThemeToggle = () => {
     const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-
-    // Prevent hydration mismatch
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (!mounted) {
-        return (
-            <Button variant='outline' size='icon' className='h-9 w-9'>
-                <div className='h-4 w-4' />
-            </Button>
-        );
-    }
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

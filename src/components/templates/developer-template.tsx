@@ -1,5 +1,6 @@
 import type { ResumeData } from '@/types/form-types';
-import { Mail, Phone, Globe, MapPin, Github, Linkedin } from 'lucide-react';
+import { Mail, Phone, Globe, MapPin } from 'lucide-react';
+import { GithubIcon, LinkedinIcon } from '@/components/icons/brand-icons';
 import { formatWebsiteDisplay, formatGithubDisplay, formatLinkedinDisplay } from '@/lib/utils';
 import { DescriptionList } from '@/components/description-list';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +45,7 @@ export function DeveloperTemplate({ data }: DeveloperTemplateProps) {
                             rel='noopener noreferrer'
                             className='flex items-center gap-2 hover:underline'
                         >
-                            <Github className='h-4 w-4' />
+                            <GithubIcon className='h-4 w-4' />
                             <span>{formatGithubDisplay(personalInfo.github)}</span>
                         </a>
                     )}
@@ -55,7 +56,7 @@ export function DeveloperTemplate({ data }: DeveloperTemplateProps) {
                             rel='noopener noreferrer'
                             className='flex items-center gap-2 hover:underline'
                         >
-                            <Linkedin className='h-4 w-4' />
+                            <LinkedinIcon className='h-4 w-4' />
                             <span>{formatLinkedinDisplay(personalInfo.linkedin)}</span>
                         </a>
                     )}

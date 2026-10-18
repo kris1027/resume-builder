@@ -59,17 +59,17 @@ export const IndexPage = () => {
     const shouldReduceMotion = useReducedMotion();
 
     // Parallax for hero decorative layers
-    const heroGradient = useParallax({ yRange: 30 });
-    const heroDots = useParallax({ yRange: 15 });
-    const heroShapes = useParallax({ yRange: 40 });
-    const heroMockup = useParallax({ yRange: 20 });
+    const { ref: heroGradientRef, y: heroGradientY } = useParallax({ yRange: 30 });
+    const { ref: heroDotsRef, y: heroDotsY } = useParallax({ yRange: 15 });
+    const { ref: heroShapesRef, y: heroShapesY } = useParallax({ yRange: 40 });
+    const { ref: heroMockupRef, y: heroMockupY } = useParallax({ yRange: 20 });
 
     // Parallax for how-it-works background
-    const howItWorksDots = useParallax({ yRange: 10 });
+    const { ref: howItWorksDotsRef, y: howItWorksDotsY } = useParallax({ yRange: 10 });
 
     // Parallax for CTA decorative circles
-    const ctaCircleLeft = useParallax({ yRange: 25 });
-    const ctaCircleRight = useParallax({ yRange: -25 });
+    const { ref: ctaCircleLeftRef, y: ctaCircleLeftY } = useParallax({ yRange: 25 });
+    const { ref: ctaCircleRightRef, y: ctaCircleRightY } = useParallax({ yRange: -25 });
 
     return (
         <div className='min-h-screen overflow-hidden'>
@@ -83,16 +83,16 @@ export const IndexPage = () => {
             <section className='relative min-h-[90vh] overflow-hidden'>
                 {/* Background gradient mesh */}
                 <motion.div
-                    ref={heroGradient.ref}
-                    style={{ y: heroGradient.y }}
+                    ref={heroGradientRef}
+                    style={{ y: heroGradientY }}
                     className='animate-gradient-shift absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-violet-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/80'
                 />
 
                 {/* Dot grid pattern */}
                 <motion.div
-                    ref={heroDots.ref}
+                    ref={heroDotsRef}
                     style={{
-                        y: heroDots.y,
+                        y: heroDotsY,
                         backgroundImage:
                             'radial-gradient(circle, currentColor 1px, transparent 1px)',
                         backgroundSize: '24px 24px',
@@ -101,7 +101,7 @@ export const IndexPage = () => {
                     aria-hidden='true'
                 />
 
-                <motion.div ref={heroShapes.ref} style={{ y: heroShapes.y }}>
+                <motion.div ref={heroShapesRef} style={{ y: heroShapesY }}>
                     <GeometricShapes />
                 </motion.div>
 
@@ -150,8 +150,8 @@ export const IndexPage = () => {
 
                         {/* Right: Floating CV Mockup */}
                         <motion.div
-                            ref={heroMockup.ref}
-                            style={{ y: heroMockup.y }}
+                            ref={heroMockupRef}
+                            style={{ y: heroMockupY }}
                             className='hidden justify-center lg:flex'
                         >
                             <FloatingCvMockup />
@@ -243,9 +243,9 @@ export const IndexPage = () => {
             <section className='relative overflow-hidden bg-slate-50/50 py-24 dark:bg-slate-900/50'>
                 {/* Subtle background texture */}
                 <motion.div
-                    ref={howItWorksDots.ref}
+                    ref={howItWorksDotsRef}
                     style={{
-                        y: howItWorksDots.y,
+                        y: howItWorksDotsY,
                         backgroundImage:
                             'radial-gradient(circle, currentColor 1px, transparent 1px)',
                         backgroundSize: '32px 32px',
@@ -372,13 +372,13 @@ export const IndexPage = () => {
                 {/* Decorative shapes */}
                 <div className='pointer-events-none absolute inset-0' aria-hidden='true'>
                     <motion.div
-                        ref={ctaCircleLeft.ref}
-                        style={{ y: ctaCircleLeft.y }}
+                        ref={ctaCircleLeftRef}
+                        style={{ y: ctaCircleLeftY }}
                         className='animate-float absolute top-12 left-[10%] h-32 w-32 rounded-full bg-indigo-500/5 blur-2xl dark:bg-indigo-500/10'
                     />
                     <motion.div
-                        ref={ctaCircleRight.ref}
-                        style={{ y: ctaCircleRight.y }}
+                        ref={ctaCircleRightRef}
+                        style={{ y: ctaCircleRightY }}
                         className='animate-float-reverse absolute right-[10%] bottom-12 h-40 w-40 rounded-full bg-violet-500/5 blur-2xl dark:bg-violet-500/10'
                     />
                 </div>
