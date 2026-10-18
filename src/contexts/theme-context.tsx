@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Theme } from '@/types/theme-context-types';
+import type { ResolvedTheme, Theme } from '@/types/theme-context-types';
 import { ThemeContext } from '@/types/theme-context-types';
 import { safeStorage } from '@/lib/storage';
 
@@ -9,13 +9,13 @@ type ThemeProviderProps = {
 };
 
 // Detect system preference
-const getSystemTheme = (): 'light' | 'dark' => {
+const getSystemTheme = (): ResolvedTheme => {
     if (typeof window === 'undefined') return 'light';
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
 // Apply theme to document
-const applyTheme = (newTheme: 'light' | 'dark') => {
+const applyTheme = (newTheme: ResolvedTheme) => {
     const root = document.documentElement;
 
     // Remove both classes first
@@ -38,7 +38,7 @@ export const ThemeProvider = ({ children, defaultTheme = 'system' }: ThemeProvid
         return savedTheme || defaultTheme;
     });
 
-    const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(getSystemTheme);
+    const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(getSystemTheme);
     const actualTheme = theme === 'system' ? systemTheme : theme;
 
     // Set theme function
