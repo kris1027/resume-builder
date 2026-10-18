@@ -81,7 +81,10 @@ export default defineConfig(({ command }) => ({
             workbox: {
                 cleanupOutdatedCaches: true,
                 clientsClaim: true,
-                globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+                globPatterns: ['**/*.{js,css,html,svg,png,woff2,mjs,ttf}'],
+                maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+                // pdf-fonts.ts adds a ?v= cache buster; match the precached font anyway
+                ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^v$/],
                 skipWaiting: true,
             },
         }),
@@ -89,11 +92,11 @@ export default defineConfig(({ command }) => ({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'src'),
+            '@': path.resolve(import.meta.dirname, 'src'),
         },
     },
     build: {
-        rollupOptions: {
+        rolldownOptions: {
             output: {
                 manualChunks(id) {
                     if (
