@@ -68,7 +68,7 @@ export const TemplatesPage = () => {
     const [hasSavedData, setHasSavedData] = useState(() => !!safeStorage.getItem('resumeData'));
     const [lastSaved, setLastSaved] = useState<Date | null>(() => {
         const savedTime = safeStorage.getItem('resumeData_lastSaved');
-        return safeStorage.getItem('resumeData') && savedTime ? new Date(savedTime) : null;
+        return hasSavedData && savedTime ? new Date(savedTime) : null;
     });
 
     const { ref: bgGradientRef, y: bgGradientY } = useParallax({ yRange: 30 });
