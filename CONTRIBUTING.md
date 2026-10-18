@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18+)
-- [pnpm](https://pnpm.io/) (v9+)
+- [Node.js](https://nodejs.org/) (v24+, see `.nvmrc`)
+- [pnpm](https://pnpm.io/) (v12+, pinned via `packageManager` in `package.json`)
 
 ## Getting Started
 
