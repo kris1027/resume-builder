@@ -15,7 +15,6 @@ import type {
     InterestProps,
     LanguageLevelProps,
     LanguageProps,
-    PersonalInfoProps,
     SkillProps,
 } from '@/types/form-types';
 import { useForm } from '@tanstack/react-form';
@@ -49,6 +48,8 @@ import { useParallax } from '@/hooks/use-parallax';
 import { fadeInUp } from '@/lib/animation-variants';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { safeStorage } from '@/lib/storage';
+import { loadStoredResume, normalizeResume } from '@/lib/stored-resume';
+import type { FormApi } from '@/types/form-component-types';
 
 const MAX_PDF_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -92,69 +93,17 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
         }
     };
 
-    // Default values for nested objects to backfill missing keys from older saves
-    const emptyPersonalInfo: PersonalInfoProps = {
-        firstName: '',
-        lastName: '',
-        location: '',
-        title: '',
-        phone: '',
-        email: '',
-        website: '',
-        linkedin: '',
-        github: '',
-    };
-
-    const emptyGdprConsent = { enabled: false, companyName: '' };
+    // Default values for a new CV
+    const getEmptyValues = () => ({ ...normalizeResume({}), templateId: activeTemplateId });
 
     // Get initial values - load from localStorage if available, otherwise defaults
     const getInitialValues = () => {
-        const storedData = safeStorage.getItem('resumeData');
-        if (storedData) {
-            let parsedData;
-            try {
-                parsedData = JSON.parse(storedData);
-            } catch {
-                if (import.meta.env.DEV)
-                    console.warn('Failed to parse stored resume data, starting fresh');
-                return {
-                    templateId: activeTemplateId,
-                    personalInfo: emptyPersonalInfo as PersonalInfoProps,
-                    experiences: [] as ExperienceProps[],
-                    education: [] as EducationProps[],
-                    skills: [] as SkillProps[],
-                    languages: [] as LanguageProps[],
-                    interests: [] as InterestProps[],
-                    gdprConsent: emptyGdprConsent,
-                };
-            }
-            return {
-                ...parsedData,
-                // Always use URL templateId when explicitly provided, otherwise fall back to stored value
-                templateId: search.templateId || parsedData.templateId || activeTemplateId,
-                // Deep-merge personalInfo to backfill missing keys from older saves
-                personalInfo: { ...emptyPersonalInfo, ...parsedData.personalInfo },
-                // Ensure arrays default to empty if missing from older saves
-                experiences: parsedData.experiences ?? [],
-                education: parsedData.education ?? [],
-                skills: parsedData.skills ?? [],
-                languages: parsedData.languages ?? [],
-                interests: parsedData.interests ?? [],
-                // Deep-merge gdprConsent to backfill missing keys from older saves
-                gdprConsent: { ...emptyGdprConsent, ...parsedData.gdprConsent },
-            };
-        }
-
-        // Return default values for new CV
+        const stored = loadStoredResume();
+        if (!stored) return getEmptyValues();
         return {
-            templateId: activeTemplateId,
-            personalInfo: emptyPersonalInfo as PersonalInfoProps,
-            experiences: [] as ExperienceProps[],
-            education: [] as EducationProps[],
-            skills: [] as SkillProps[],
-            languages: [] as LanguageProps[],
-            interests: [] as InterestProps[],
-            gdprConsent: emptyGdprConsent,
+            ...stored,
+            // Always use URL templateId when explicitly provided, otherwise fall back to stored value
+            templateId: search.templateId || stored.templateId || activeTemplateId,
         };
     };
 
@@ -180,6 +129,9 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
             navigate({ to: '/preview', search: { templateId: value.templateId } });
         },
     });
+
+    // Form sections take a loosely typed FormApi, so widen the strongly typed form once here
+    const sectionForm = form as unknown as FormApi;
 
     // Sync form templateId when URL parameter changes
     useEffect(() => {
@@ -231,16 +183,7 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
         safeStorage.removeItem('resumeData');
         safeStorage.removeItem('resumeData_lastSaved');
         setLastSaved(null);
-        form.reset({
-            templateId: activeTemplateId,
-            personalInfo: emptyPersonalInfo as PersonalInfoProps,
-            experiences: [] as ExperienceProps[],
-            education: [] as EducationProps[],
-            skills: [] as SkillProps[],
-            languages: [] as LanguageProps[],
-            interests: [] as InterestProps[],
-            gdprConsent: emptyGdprConsent,
-        });
+        form.reset(getEmptyValues());
     };
 
     const handleLoadPDF = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -259,23 +202,13 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
         try {
             const resumeData = await loadResumeFromPDF(file);
 
-            // Normalize PDF data by merging with defaults to backfill missing keys
-            const normalizedPersonalInfo = { ...emptyPersonalInfo, ...resumeData.personalInfo };
-            const normalizedGdprConsent = { ...emptyGdprConsent, ...resumeData.gdprConsent };
-
-            // Build the complete new form values
+            // Normalize PDF data by merging with defaults to backfill missing keys.
             // PDF metadata (ResumeData) doesn't include templateId — fall back to
             // the currently active template so form.reset() gets a valid string
             // and the Zod schema doesn't trigger a "fix errors" validation message.
             const newValues = {
+                ...normalizeResume(resumeData),
                 templateId: resumeData.templateId || activeTemplateId,
-                personalInfo: normalizedPersonalInfo,
-                experiences: resumeData.experiences ?? [],
-                education: resumeData.education ?? [],
-                skills: resumeData.skills ?? [],
-                languages: resumeData.languages ?? [],
-                interests: resumeData.interests ?? [],
-                gdprConsent: normalizedGdprConsent,
             };
 
             // Persist first so getInitialValues() returns matching data on
@@ -686,13 +619,13 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
                     >
                         {/* Personal Information Section */}
                         <motion.div {...fadeInUp(0, shouldReduceMotion)}>
-                            <PersonalInfoSection form={form} />
+                            <PersonalInfoSection form={sectionForm} />
                         </motion.div>
 
                         {/* Work Experience Section */}
                         <motion.div {...fadeInUp(0.05, shouldReduceMotion)}>
                             <ExperienceSection
-                                form={form}
+                                form={sectionForm}
                                 addExperience={addExperience}
                                 removeExperience={removeExperience}
                                 reorderExperiences={reorderExperiences}
@@ -702,7 +635,7 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
                         {/* Education Section */}
                         <motion.div {...fadeInUp(0.05, shouldReduceMotion)}>
                             <EducationSection
-                                form={form}
+                                form={sectionForm}
                                 addEducation={addEducation}
                                 removeEducation={removeEducation}
                                 reorderEducation={reorderEducation}
@@ -712,7 +645,7 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
                         {/* Skills Section */}
                         <motion.div {...fadeInUp(0.05, shouldReduceMotion)}>
                             <SkillsSection
-                                form={form}
+                                form={sectionForm}
                                 addSkill={addSkill}
                                 removeSkill={removeSkill}
                                 reorderSkills={reorderSkills}
@@ -722,7 +655,7 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
                         {/* Languages Section */}
                         <motion.div {...fadeInUp(0.05, shouldReduceMotion)}>
                             <LanguagesSection
-                                form={form}
+                                form={sectionForm}
                                 addLanguage={addLanguage}
                                 removeLanguage={removeLanguage}
                                 reorderLanguages={reorderLanguages}
@@ -732,7 +665,7 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
                         {/* Interests Section */}
                         <motion.div {...fadeInUp(0.05, shouldReduceMotion)}>
                             <InterestsSection
-                                form={form}
+                                form={sectionForm}
                                 addInterest={addInterest}
                                 removeInterest={removeInterest}
                                 reorderInterests={reorderInterests}
@@ -741,7 +674,7 @@ const BuilderPage = ({ templateId = 'developer' }: BuilderPageProps) => {
 
                         {/* GDPR Consent Section */}
                         <motion.div {...fadeInUp(0.05, shouldReduceMotion)}>
-                            <GdprConsentSection form={form} />
+                            <GdprConsentSection form={sectionForm} />
                         </motion.div>
 
                         {/* Submit Button */}

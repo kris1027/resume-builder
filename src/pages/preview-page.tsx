@@ -19,7 +19,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { safeStorage } from '@/lib/storage';
+import { loadStoredResume } from '@/lib/stored-resume';
 import { PDFViewer, type DocumentProps } from '@react-pdf/renderer';
 import { DeveloperPDF } from '@/lib/pdf-templates/developer-pdf';
 import { DefaultPDF } from '@/lib/pdf-templates/default-pdf';
@@ -73,29 +73,6 @@ async function findMinCompactScale(
     }
     return hi;
 }
-
-const loadStoredResume = (): ResumeData | null => {
-    const storedData = safeStorage.getItem('resumeData');
-    if (storedData) {
-        let parsedData;
-        try {
-            parsedData = JSON.parse(storedData);
-        } catch {
-            if (import.meta.env.DEV) console.warn('Failed to parse stored resume data');
-            return null;
-        }
-        return {
-            personalInfo: parsedData.personalInfo,
-            experiences: parsedData.experiences || [],
-            education: parsedData.education || [],
-            skills: parsedData.skills || [],
-            languages: parsedData.languages || [],
-            interests: parsedData.interests || [],
-            gdprConsent: parsedData.gdprConsent,
-        };
-    }
-    return null;
-};
 
 export const PreviewPage = () => {
     const { t, i18n } = useTranslation();
