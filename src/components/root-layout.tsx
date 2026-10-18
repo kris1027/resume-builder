@@ -20,8 +20,6 @@ export const RootLayout = () => {
                 >
                     {t('accessibility.skipToContent')}
                 </a>
-                {/* In the page flow, not fixed, so it pushes the page down instead of covering headers */}
-                <OfflineIndicator />
                 <div className='bg-background text-foreground min-h-screen transition-colors'>
                     <main id='main-content' className='flex-1'>
                         <ErrorBoundary>
@@ -29,6 +27,7 @@ export const RootLayout = () => {
                         </ErrorBoundary>
                     </main>
                 </div>
+                <OfflineIndicator />
                 <PrivacyNotice />
                 <PwaInstallPrompt />
                 <PwaReloadPrompt />
