@@ -1,12 +1,13 @@
 import { Svg, Path, Circle, Rect } from '@react-pdf/renderer';
+import { GITHUB_ICON, LINKEDIN_ICON } from '@/lib/brand-icon-paths';
 
 /**
  * Lucide-style contact icons recreated as @react-pdf/renderer SVG primitives.
  *
  * lucide-react components cannot render inside react-pdf (different renderer),
  * so these mirror the same 24x24 stroke icons used by the on-screen templates
- * (see src/components/templates/* and src/components/icons/brand-icons.tsx). Keep path data in sync with lucide if the
- * UI icons change.
+ * (see src/components/templates/*). Brand icon paths are shared with the UI via
+ * @/lib/brand-icon-paths; keep the others in sync with lucide if the UI icons change.
  */
 interface PDFIconProps {
     size?: number;
@@ -75,8 +76,9 @@ export function MapPinIcon(props: PDFIconProps) {
 export function GithubIcon(props: PDFIconProps) {
     return (
         <IconBase {...props}>
-            <Path d='M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4' />
-            <Path d='M9 18c-4.51 2-5-2-7-2' />
+            {GITHUB_ICON.paths.map((d) => (
+                <Path key={d} d={d} />
+            ))}
         </IconBase>
     );
 }
@@ -84,9 +86,9 @@ export function GithubIcon(props: PDFIconProps) {
 export function LinkedinIcon(props: PDFIconProps) {
     return (
         <IconBase {...props}>
-            <Path d='M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z' />
-            <Rect width='4' height='12' x='2' y='9' />
-            <Circle cx='4' cy='4' r='2' />
+            <Path d={LINKEDIN_ICON.path} />
+            <Rect {...LINKEDIN_ICON.rect} />
+            <Circle {...LINKEDIN_ICON.circle} />
         </IconBase>
     );
 }
