@@ -29,7 +29,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 3   | Upgrades & replacements         | Foundation | done        |
 | 17  | Unified radix-ui package        | Foundation | done        |
 | 18  | Intl dates instead of date-fns  | Foundation | done        |
-| 19  | Single CSP source               | Foundation | planned     |
+| 19  | Single CSP source               | Foundation | in-progress |
 | 20  | React Compiler                  | Foundation | planned     |
 | 4   | Feature based folder structure  | Foundation | planned     |
 | 5   | Performance budgets             | Foundation | planned     |
@@ -137,11 +137,11 @@ spec [0001](../specs/0001-stack-review/index.md) (build plan step 9). code in `s
 
 - [x] Build it: `/develop intl dates`
 
-### 19. Single CSP source · from spec 0001
+### 19. Single CSP source · in-progress · from spec 0001
 
 `vite.config.ts` reads the CSP from `vercel.json` instead of keeping its own copy.
 **Done when:** the CSP string appears once in the repo, and the meta tag and deployed header match on a preview deployment.
-spec [0001](../specs/0001-stack-review/index.md) (build plan step 10)
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 10). code in `vite.config.ts`, `tsconfig.node.json`
 
 - [ ] Build it: `/develop single csp source`
 
