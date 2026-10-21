@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { formatCVDate, formatCVDateShort, formatCVYear, getMonthNames } from './date-format';
 
-// Pinned against the date-fns output these helpers replaced ('LLLL yyyy', 'LLL yyyy', 'LLLL', 'LLL')
+// Pinned against the date-fns 4.1.0 output these helpers replaced ('LLLL yyyy', 'LLL yyyy',
+// 'LLLL', 'LLL' with the enUS and pl locales); all 48 strings checked on Node 24, 2026-10-21
 const LONG = {
     en: [
         'January',

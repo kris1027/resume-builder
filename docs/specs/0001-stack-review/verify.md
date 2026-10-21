@@ -12,6 +12,7 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - [x] DevTools offline: open `/preview` with saved data → PDF preview renders; Download PDF works; load the PDF on `/builder` → fields come back. Fonts are served by the service worker even with the `?v=` query → AC-4
 - [x] Gallery card for the developer template, side by side with the live site → GitHub and LinkedIn icons look the same → AC-6
 - [x] Feature 17 (`radix-ui`): rerun the AC-2 route matrix in the production preview, then on `/builder` open the language and theme menus (DropdownMenu), tick and untick a checkbox through its label (Checkbox, Label), pick a level in a language Select, open and close a date Popover, open and cancel the Reset AlertDialog, and follow the Back to Templates link (`Button asChild`, Slot) → all 28 route combinations and every primitive behave as before, no console errors → AC-2, AC-9
+- [ ] Feature 18 (`Intl` dates): with sample data that has work and education dates, check in EN and PL the builder date picker month lists, the three gallery cards, and `/preview` for each template (developer long month, default and veterinary short month, years on education) → month names and casing match the pinned strings in `date-format.test.ts`, e.g. `styczeń 2024` / `sty 2024` → AC-5
 
 ## Commands
 
@@ -23,6 +24,8 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - [x] `pnpm audit` → no known vulnerabilities; `pnpm peers check` → no issues → AC-1
 - [x] `pnpm why tar js-yaml diff seroval seroval-plugins` → each resolves above its old override floor or is gone, so all five `pnpm.overrides` were dropped rather than moved to `pnpm-workspace.yaml` → AC-1
 - [x] `pnpm build` → compare chunk sizes against the table in the PR description → AC-10 (table recorded in PR #86)
+- [x] Feature 18: `format()` from date-fns 4.1.0 with `enUS` and `pl` (`LLLL yyyy`, `LLL yyyy`, `LLLL`, `LLL`, all 12 months of 2024) → all 48 strings equal the pins in `src/lib/date-format.test.ts` → AC-5
+- [x] `grep date-fns package.json pnpm-lock.yaml` and `grep -r date-fns src` → no match except the pin comment in `date-format.test.ts` → AC-9 (feature 18)
 
 ## Acceptance criteria coverage
 
@@ -30,7 +33,8 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - AC-2: route matrix in the production preview, rerun with a primitives pass for feature 17
 - AC-3: export and import round trip per template, multi page toggle
 - AC-4: Cache Storage listing, offline preview, export and import
-- AC-5, AC-7, AC-8: belong to features 18, 19 and 20, not this one
+- AC-5: date-fns pin check plus the EN/PL visual pass (feature 18)
+- AC-7, AC-8: belong to features 19 and 20, not this one
 - AC-6: icon side by side
-- AC-9: devtools and react-day-picker gone here, `@radix-ui/react-*` gone in feature 17; `date-fns` goes in feature 18
+- AC-9: devtools and react-day-picker gone here, `@radix-ui/react-*` gone in feature 17, `date-fns` gone in feature 18
 - AC-10: chunk table in the PR
