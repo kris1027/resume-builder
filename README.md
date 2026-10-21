@@ -84,7 +84,6 @@ These sample resumes show the Default and Developer templates with fictional dat
 - [pdfjs-dist](https://mozilla.github.io/pdf.js/) — PDF parsing for import
 - [@react-pdf/renderer](https://react-pdf.org/) — Text-based, ATS-readable PDF export with custom fonts
 - [Motion](https://motion.dev/) — Scroll-linked parallax and whileInView entrance animations
-- [date-fns](https://date-fns.org/) — Date utilities
 - [DOMPurify](https://github.com/cure53/DOMPurify) — HTML sanitization
 - [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) + [Workbox](https://developer.chrome.com/docs/workbox/) — Progressive Web App support
 
