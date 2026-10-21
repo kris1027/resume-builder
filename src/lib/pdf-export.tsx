@@ -1,6 +1,6 @@
 import type { ResumeData } from '@/types/form-types';
 import type { TemplateId } from '@/lib/template-ids';
-import { normalizePDFLang } from '@/lib/pdf-translations';
+import { normalizeLang } from '@/lib/app-lang';
 import { getPdfjs } from '@/lib/pdfjs-singleton';
 
 export interface PDFExportOptions {
@@ -15,7 +15,7 @@ export async function exportToPDF(
     options: PDFExportOptions = {},
 ): Promise<void> {
     const { filename = 'resume.pdf', compactScale = 0, lang: rawLang = 'en' } = options;
-    const lang = normalizePDFLang(rawLang);
+    const lang = normalizeLang(rawLang);
 
     const [{ pdf }, { DeveloperPDF }, { DefaultPDF }, { VeterinaryPDF }] = await Promise.all([
         import('@react-pdf/renderer'),

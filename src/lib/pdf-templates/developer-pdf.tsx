@@ -1,9 +1,10 @@
 import '@/lib/pdf-fonts';
 import { Document, Page, View, Text, Link, StyleSheet } from '@react-pdf/renderer';
 import type { ResumeData } from '@/types/form-types';
-import { format } from 'date-fns';
 import { formatWebsiteDisplay, formatGithubDisplay, formatLinkedinDisplay } from '@/lib/utils';
-import { getPDFStrings, getDateFnsLocale, type PDFLang } from '@/lib/pdf-translations';
+import { formatCVDate, formatCVYear } from '@/lib/date-format';
+import type { AppLang } from '@/lib/app-lang';
+import { getPDFStrings } from '@/lib/pdf-translations';
 import { buildResumeMetadata } from '@/lib/pdf-parser';
 import {
     GlobeIcon,
@@ -17,7 +18,7 @@ import {
 interface DeveloperPDFProps {
     data: ResumeData;
     compactScale?: number; // 0 = normal, 1 = maximum compact
-    lang?: PDFLang;
+    lang?: AppLang;
 }
 
 const C = {
@@ -124,18 +125,6 @@ function createStyles(t: number) {
     });
 }
 
-function formatPDFDate(dateString: string, locale: ReturnType<typeof getDateFnsLocale>): string {
-    if (!dateString) return '';
-    const [year, month] = dateString.split('-');
-    const date = new Date(parseInt(year), parseInt(month) - 1);
-    return format(date, 'LLLL yyyy', { locale });
-}
-
-function formatPDFYear(dateString: string): string {
-    if (!dateString) return '';
-    return dateString.split('-')[0];
-}
-
 function parseDescriptionLines(description: string): string[] {
     return description
         .split('\n')
@@ -148,7 +137,6 @@ export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperP
     const styles = createStyles(compactScale);
     const iconSize = lerp(9, 8, compactScale);
     const str = getPDFStrings(lang);
-    const dateLocale = getDateFnsLocale(lang);
     const {
         personalInfo: p,
         experiences,
@@ -246,10 +234,10 @@ export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperP
                                         </Text>
                                     </Text>
                                     <Text style={styles.expMeta}>
-                                        {formatPDFDate(exp.startDate, dateLocale)} -{' '}
+                                        {formatCVDate(exp.startDate, lang)} -{' '}
                                         {exp.current
                                             ? str.present
-                                            : formatPDFDate(exp.endDate, dateLocale)}
+                                            : formatCVDate(exp.endDate, lang)}
                                         {exp.location ? ` | ${exp.location}` : ''}
                                     </Text>
                                     {parseDescriptionLines(exp.description).map((line, j) => (
@@ -277,8 +265,7 @@ export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperP
                                         {edu.institution}
                                     </Text>
                                     <Text style={styles.eduMeta}>
-                                        {formatPDFYear(edu.startDate)} -{' '}
-                                        {formatPDFYear(edu.endDate)}
+                                        {formatCVYear(edu.startDate)} - {formatCVYear(edu.endDate)}
                                     </Text>
                                     {edu.description ? (
                                         <Text style={styles.bulletText}>{edu.description}</Text>

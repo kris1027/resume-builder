@@ -1,40 +1,20 @@
-import { format } from 'date-fns';
-import type { Locale } from 'date-fns';
-import { enUS, pl } from 'date-fns/locale';
+import { normalizeLang, type AppLang } from '@/lib/app-lang';
+import * as dateFormat from '@/lib/date-format';
+import type { MonthStyle } from '@/lib/date-format';
 import i18n from '@/i18n/config';
 
-const localeMap: Record<string, Locale> = {
-    en: enUS,
-    pl: pl,
-};
+// App side wrappers that default to the current i18n language. PDF templates import
+// '@/lib/date-format' directly with their lang prop, so they stay off the i18n singleton.
 
-const getLocale = (): Locale => {
-    const lang = (i18n.resolvedLanguage ?? i18n.language)?.split('-')[0];
-    return (lang ? localeMap[lang] : undefined) ?? enUS;
-};
+export { formatCVYear } from '@/lib/date-format';
 
-export const formatCVDate = (dateString: string): string => {
-    if (!dateString) return '';
-    const [year, month] = dateString.split('-');
-    const date = new Date(parseInt(year), parseInt(month) - 1);
-    return format(date, 'LLLL yyyy', { locale: getLocale() });
-};
+const getCurrentLang = (): AppLang => normalizeLang(i18n.resolvedLanguage ?? i18n.language);
 
-export const formatCVDateShort = (dateString: string): string => {
-    if (!dateString) return '';
-    const [year, month] = dateString.split('-');
-    const date = new Date(parseInt(year), parseInt(month) - 1);
-    return format(date, 'LLL yyyy', { locale: getLocale() });
-};
+export const formatCVDate = (dateString: string, lang: AppLang = getCurrentLang()): string =>
+    dateFormat.formatCVDate(dateString, lang);
 
-export const formatCVYear = (dateString: string): string => {
-    if (!dateString) return '';
-    const [year] = dateString.split('-');
-    return year;
-};
+export const formatCVDateShort = (dateString: string, lang: AppLang = getCurrentLang()): string =>
+    dateFormat.formatCVDateShort(dateString, lang);
 
-export const getMonthNames = (short = false): string[] => {
-    const locale = getLocale();
-    const formatStr = short ? 'LLL' : 'LLLL';
-    return Array.from({ length: 12 }, (_, i) => format(new Date(2024, i), formatStr, { locale }));
-};
+export const getMonthNames = (style: MonthStyle, lang: AppLang = getCurrentLang()): string[] =>
+    dateFormat.getMonthNames(style, lang);

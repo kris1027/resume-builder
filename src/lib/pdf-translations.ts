@@ -1,15 +1,4 @@
-import { enUS, pl } from 'date-fns/locale';
-import type { Locale } from 'date-fns';
-
-export type PDFLang = 'en' | 'pl';
-
-export function normalizePDFLang(lang: string): PDFLang {
-    return lang.startsWith('pl') ? 'pl' : 'en';
-}
-
-export function getDateFnsLocale(lang: PDFLang): Locale {
-    return lang === 'pl' ? pl : enUS;
-}
+import type { AppLang } from '@/lib/app-lang';
 
 interface PDFStrings {
     workExperience: string;
@@ -26,7 +15,7 @@ interface PDFStrings {
     gdprConsentGeneric: string;
 }
 
-const strings: Record<PDFLang, PDFStrings> = {
+const strings: Record<AppLang, PDFStrings> = {
     en: {
         workExperience: 'Work Experience',
         professionalExperience: 'Professional Experience',
@@ -61,6 +50,6 @@ const strings: Record<PDFLang, PDFStrings> = {
     },
 };
 
-export function getPDFStrings(lang: PDFLang): PDFStrings {
+export function getPDFStrings(lang: AppLang): PDFStrings {
     return strings[lang] ?? strings.en;
 }

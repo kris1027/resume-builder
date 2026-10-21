@@ -6,20 +6,23 @@ The three resume templates rendered with `@react-pdf/renderer`. They drive the l
 
 ## Key files
 
-| File                                                           | Owns                                                                             |
-| -------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `src/lib/pdf-templates/{developer,default,veterinary}-pdf.tsx` | One PDF component per template, props `data`, `compactScale`, `lang`             |
-| `src/lib/pdf-templates/pdf-icons.tsx`                          | Contact icons drawn as react-pdf SVG                                             |
-| `src/lib/pdf-translations.ts`                                  | EN/PL strings and date-fns locale for PDFs (`getPDFStrings`, `normalizePDFLang`) |
-| `src/lib/pdf-fonts.ts`                                         | Font registration from `public/fonts/`, with a `?v=` cache buster                |
-| `src/lib/pdf-export.tsx`                                       | Download (`exportToPDF`), page counting, filename                                |
-| `src/lib/pdf-parser.ts`                                        | Import: embedded metadata first, text parsing fallback                           |
-| `src/lib/pdfjs-singleton.ts`                                   | Lazy pdfjs load, worker at `public/pdf.worker.min.mjs`                           |
-| `src/pages/preview-page.tsx`                                   | Picks the PDF component and searches for the compact scale that fits one page    |
+| File                                                           | Owns                                                                          |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `src/lib/pdf-templates/{developer,default,veterinary}-pdf.tsx` | One PDF component per template, props `data`, `compactScale`, `lang`          |
+| `src/lib/pdf-templates/pdf-icons.tsx`                          | Contact icons drawn as react-pdf SVG                                          |
+| `src/lib/pdf-translations.ts`                                  | EN/PL strings for PDFs (`getPDFStrings`)                                      |
+| `src/lib/date-format.ts`                                       | Month and year via `Intl.DateTimeFormat`, `lang` required                     |
+| `src/lib/app-lang.ts`                                          | `AppLang` (`'en' \| 'pl'`) and `normalizeLang`                                |
+| `src/lib/pdf-fonts.ts`                                         | Font registration from `public/fonts/`, with a `?v=` cache buster             |
+| `src/lib/pdf-export.tsx`                                       | Download (`exportToPDF`), page counting, filename                             |
+| `src/lib/pdf-parser.ts`                                        | Import: embedded metadata first, text parsing fallback                        |
+| `src/lib/pdfjs-singleton.ts`                                   | Lazy pdfjs load, worker at `public/pdf.worker.min.mjs`                        |
+| `src/pages/preview-page.tsx`                                   | Picks the PDF component and searches for the compact scale that fits one page |
 
 ## Conventions
 
 - No `t()` or React context here: react-pdf renders outside the i18n provider. Section titles and the GDPR text come from `pdf-translations.ts`; add new strings there in both `en` and `pl`, keeping the wording in step with `cv.*` keys in the locale files.
+- Dates come from `@/lib/date-format` with the template's `lang` prop, never `@/lib/date-utils`: that one imports `@/i18n/config` to default the language.
 - Every template imports `@/lib/pdf-fonts` and styles through `createStyles(compactScale)`, where `lerp(normal, min, t)` shrinks sizes from 0 (normal) to 1 (most compact). New sizes should go through `lerp` so the one page fit keeps working.
 - Colors are literal hex in a local `C` object; the page background stays white.
 - Each template embeds `buildResumeMetadata(templateId, data)` in the PDF `creator` field (versioned payload `v: 1`). Import reads that first, so a shape change to `ResumeData` needs the payload handled (bump `v` or keep it compatible).

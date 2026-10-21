@@ -40,8 +40,8 @@ export function DatePicker({
 }: DatePickerProps) {
     // Re-render on language change so month names update
     useTranslation();
-    const months = getMonthNames();
-    const monthsShort = getMonthNames(true);
+    const months = getMonthNames('long');
+    const monthsShort = getMonthNames('short');
 
     // Convert string value to Date if needed
     const dateValue = React.useMemo(() => {

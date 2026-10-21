@@ -9,7 +9,7 @@ import { exportToPDF, countPdfPages, generateResumeFilename } from '@/lib/pdf-ex
 import { TEMPLATE_IDS } from '@/lib/template-ids';
 import type { TemplateId } from '@/lib/template-ids';
 import { useTranslation } from 'react-i18next';
-import { normalizePDFLang } from '@/lib/pdf-translations';
+import { normalizeLang, type AppLang } from '@/lib/app-lang';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -29,7 +29,7 @@ function getPdfDocument(
     resumeData: ResumeData,
     templateId: TemplateId,
     compactScale: number,
-    lang: ReturnType<typeof normalizePDFLang>,
+    lang: AppLang,
 ) {
     if (templateId === 'developer')
         return <DeveloperPDF data={resumeData} compactScale={compactScale} lang={lang} />;
@@ -81,7 +81,7 @@ export const PreviewPage = () => {
     const templateId: TemplateId = TEMPLATE_IDS.includes(rawTemplateId as TemplateId)
         ? (rawTemplateId as TemplateId)
         : 'developer';
-    const lang = normalizePDFLang(i18n.language);
+    const lang = normalizeLang(i18n.language);
 
     const [resumeData] = useState(loadStoredResume);
     const [isExporting, setIsExporting] = useState(false);
