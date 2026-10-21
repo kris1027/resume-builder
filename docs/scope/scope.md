@@ -27,8 +27,8 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 1   | Coding standards & AGENTS.md    | Foundation | done        |
 | 2   | Stack review                    | Foundation | in-progress |
 | 3   | Upgrades & replacements         | Foundation | done        |
-| 17  | Unified radix-ui package        | Foundation | in-progress |
-| 18  | Intl dates instead of date-fns  | Foundation | planned     |
+| 17  | Unified radix-ui package        | Foundation | done        |
+| 18  | Intl dates instead of date-fns  | Foundation | done        |
 | 19  | Single CSP source               | Foundation | planned     |
 | 20  | React Compiler                  | Foundation | planned     |
 | 4   | Feature based folder structure  | Foundation | planned     |
@@ -121,7 +121,7 @@ code in `package.json`, `pnpm-workspace.yaml`, `vite.config.ts`, `eslint.config.
     - [x] App library majors: i18next, motion 13, lucide 1, pdfjs 6 (step 7), AC-2, AC-3, AC-4, AC-6
     - [x] Final pass over the full check matrix (step 12), AC-2, AC-3, AC-4, AC-10
 
-### 17. Unified radix-ui package · from spec 0001
+### 17. Unified radix-ui package · done · from spec 0001
 
 Swap the seven `@radix-ui/react-*` packages for the single `radix-ui` package; same components, only import paths change.
 **Done when:** no `@radix-ui/react-*` entry is left in `package.json` and every dialog, select, popover and menu works as before.
@@ -129,13 +129,13 @@ spec [0001](../specs/0001-stack-review/index.md) (build plan step 8). code in `s
 
 - [x] Build it: `/develop unified radix-ui package`
 
-### 18. Intl dates instead of date-fns · from spec 0001
+### 18. Intl dates instead of date-fns · done · from spec 0001
 
 Format month and year with the browser's `Intl.DateTimeFormat` in the app and all three PDF templates, then drop `date-fns`.
 **Done when:** a pinning test shows identical EN and PL output for all 12 months, and `date-fns` is gone.
-spec [0001](../specs/0001-stack-review/index.md) (build plan step 9)
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 9). code in `src/lib/date-utils.ts`, `src/lib/pdf-templates/`
 
-- [ ] Build it: `/develop intl dates`
+- [x] Build it: `/develop intl dates`
 
 ### 19. Single CSP source · from spec 0001
 
