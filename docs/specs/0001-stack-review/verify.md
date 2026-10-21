@@ -1,4 +1,4 @@
-# Verify: Upgrades & replacements · spec 0001 · updated 2026-10-18
+# Verify: Upgrades & replacements · spec 0001 · updated 2026-10-21
 
 _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `/test` locks the durable ones._
 
@@ -11,6 +11,7 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - [x] After a first visit, DevTools Application → Cache Storage lists `/pdf.worker.min.mjs` and the ten `/fonts/*.ttf` files → AC-4
 - [x] DevTools offline: open `/preview` with saved data → PDF preview renders; Download PDF works; load the PDF on `/builder` → fields come back. Fonts are served by the service worker even with the `?v=` query → AC-4
 - [x] Gallery card for the developer template, side by side with the live site → GitHub and LinkedIn icons look the same → AC-6
+- [x] Feature 17 (`radix-ui`): rerun the AC-2 route matrix in the production preview, then on `/builder` open the language and theme menus (DropdownMenu), tick and untick a checkbox through its label (Checkbox, Label), pick a level in a language Select, open and close a date Popover, open and cancel the Reset AlertDialog, and follow the Back to Templates link (`Button asChild`, Slot) → all 28 route combinations and every primitive behave as before, no console errors → AC-2, AC-9
 
 ## Commands
 
@@ -18,6 +19,7 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - [x] `pnpm format:check` → passes (CI runs it) → AC-1
 - [x] `node -v` matches `.nvmrc` (24) and `pnpm -v` prints 12.14.0 → AC-1
 - [x] `grep -E "react-router-devtools|react-day-picker" package.json` → no match → AC-9
+- [x] `grep "@radix-ui/react-" package.json` → no match; `pnpm build` still emits the `radix` chunk → AC-9 (feature 17)
 - [x] `pnpm audit` → no known vulnerabilities; `pnpm peers check` → no issues → AC-1
 - [x] `pnpm why tar js-yaml diff seroval seroval-plugins` → each resolves above its old override floor or is gone, so all five `pnpm.overrides` were dropped rather than moved to `pnpm-workspace.yaml` → AC-1
 - [x] `pnpm build` → compare chunk sizes against the table in the PR description → AC-10 (table recorded in PR #86)
@@ -25,10 +27,10 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 ## Acceptance criteria coverage
 
 - AC-1: preview build log, `pnpm pre-commit`, `format:check`, versions, audit
-- AC-2: route matrix in the production preview
+- AC-2: route matrix in the production preview, rerun with a primitives pass for feature 17
 - AC-3: export and import round trip per template, multi page toggle
 - AC-4: Cache Storage listing, offline preview, export and import
 - AC-5, AC-7, AC-8: belong to features 18, 19 and 20, not this one
 - AC-6: icon side by side
-- AC-9: partly here (devtools and react-day-picker gone); `date-fns` and `@radix-ui/react-*` go in features 18 and 17
+- AC-9: devtools and react-day-picker gone here, `@radix-ui/react-*` gone in feature 17; `date-fns` goes in feature 18
 - AC-10: chunk table in the PR

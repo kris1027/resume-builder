@@ -105,7 +105,10 @@ export default defineConfig(({ command }) => ({
                     ) {
                         return 'motion';
                     }
-                    if (id.includes('node_modules/@radix-ui')) {
+                    if (
+                        id.includes('node_modules/@radix-ui') ||
+                        id.includes('node_modules/radix-ui')
+                    ) {
                         return 'radix';
                     }
                 },
