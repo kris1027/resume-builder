@@ -2,7 +2,7 @@ import '@/lib/pdf-fonts';
 import { Document, Page, View, Text, Link, StyleSheet } from '@react-pdf/renderer';
 import type { ResumeData } from '@/types/form-types';
 import { formatWebsiteDisplay, formatGithubDisplay, formatLinkedinDisplay } from '@/lib/utils';
-import { formatCVDate } from '@/lib/date-format';
+import { formatCVDate, formatCVYear } from '@/lib/date-format';
 import type { AppLang } from '@/lib/app-lang';
 import { getPDFStrings } from '@/lib/pdf-translations';
 import { buildResumeMetadata } from '@/lib/pdf-parser';
@@ -123,11 +123,6 @@ function createStyles(t: number) {
             paddingBottom: s(20, 10),
         },
     });
-}
-
-function formatPDFYear(dateString: string): string {
-    if (!dateString) return '';
-    return dateString.split('-')[0];
 }
 
 function parseDescriptionLines(description: string): string[] {
@@ -270,8 +265,7 @@ export function DeveloperPDF({ data, compactScale = 0, lang = 'en' }: DeveloperP
                                         {edu.institution}
                                     </Text>
                                     <Text style={styles.eduMeta}>
-                                        {formatPDFYear(edu.startDate)} -{' '}
-                                        {formatPDFYear(edu.endDate)}
+                                        {formatCVYear(edu.startDate)} - {formatCVYear(edu.endDate)}
                                     </Text>
                                     {edu.description ? (
                                         <Text style={styles.bulletText}>{edu.description}</Text>

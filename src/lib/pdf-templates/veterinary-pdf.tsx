@@ -2,7 +2,7 @@ import '@/lib/pdf-fonts';
 import { Document, Page, View, Text, Link, StyleSheet } from '@react-pdf/renderer';
 import type { ResumeData } from '@/types/form-types';
 import { formatLinkedinDisplay } from '@/lib/utils';
-import { formatCVDateShort } from '@/lib/date-format';
+import { formatCVDateShort, formatCVYear } from '@/lib/date-format';
 import type { AppLang } from '@/lib/app-lang';
 import { getPDFStrings } from '@/lib/pdf-translations';
 import { buildResumeMetadata } from '@/lib/pdf-parser';
@@ -174,11 +174,6 @@ function createStyles(t: number) {
     });
 }
 
-function formatPDFYear(dateString: string): string {
-    if (!dateString) return '';
-    return dateString.split('-')[0];
-}
-
 function parseDescriptionLines(description: string): string[] {
     return description
         .split('\n')
@@ -300,8 +295,7 @@ export function VeterinaryPDF({ data, compactScale = 0, lang = 'en' }: Veterinar
                                     </Text>
                                     <Text style={styles.eduInstitution}>{edu.institution}</Text>
                                     <Text style={styles.eduYears}>
-                                        {formatPDFYear(edu.startDate)} -{' '}
-                                        {formatPDFYear(edu.endDate)}
+                                        {formatCVYear(edu.startDate)} - {formatCVYear(edu.endDate)}
                                     </Text>
                                     {edu.description ? (
                                         <Text style={styles.bulletText}>{edu.description}</Text>
