@@ -31,7 +31,7 @@ The app will be available at `http://localhost:5173/`.
 | `pnpm run dev`       | Start dev server                   |
 | `pnpm run build`     | Production build                   |
 | `pnpm run preview`   | Preview production build           |
-| `pnpm lint`          | TypeScript + ESLint checks         |
+| `pnpm lint`          | ESLint checks                      |
 | `pnpm format`        | Format all files with Prettier     |
 | `pnpm format:check`  | Check formatting (CI uses this)    |
 | `pnpm test`          | Run all tests once                 |
@@ -44,7 +44,8 @@ The app will be available at `http://localhost:5173/`.
 ## Code Style
 
 - **Formatter**: Prettier (config in `.prettierrc`) — single quotes, 4-space tabs, 100 char width
-- **Linter**: ESLint with TypeScript support
+- **Linter**: ESLint with TypeScript support and the React Compiler rules (`react-hooks` v7)
+- **Typecheck**: `tsc -b` runs inside `pnpm build`, not `pnpm lint`
 - **Tailwind**: Classes are auto-sorted by `prettier-plugin-tailwindcss`
 - Run `pnpm format` before committing to avoid CI failures
 
@@ -61,6 +62,8 @@ The app will be available at `http://localhost:5173/`.
 - Arrow function components with typed props
 - Props type named `ComponentNameProps`
 - Callback props: `on*` prefix; handlers: `handle*` prefix
+- The React Compiler memoizes every component, so don't add `useMemo`, `useCallback` or `memo` only for speed
+- If a component misbehaves under the compiler, opt that one out with `'use no memo'` plus a comment naming the reason; never turn the compiler off globally
 
 ## Testing
 
@@ -83,8 +86,8 @@ GitHub Actions runs on push to `main` and on pull requests targeting `main`:
 
 1. Format check (`pnpm format:check`)
 2. Lint (`pnpm lint`)
-3. Test (`pnpm test`)
-4. Build (`pnpm run build`)
+3. Test (`pnpm test`, with the React Compiler on, like the build)
+4. Build (`pnpm run build`, typecheck plus compiled output)
 
 ## Pull Requests
 

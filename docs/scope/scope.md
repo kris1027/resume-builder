@@ -11,39 +11,39 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 ## At a glance
 
-| #   | Feature                         | Phase      | Status      |
-| --- | ------------------------------- | ---------- | ----------- |
-| A   | Landing page                    | Existing   | existing    |
-| B   | Template gallery & detail       | Existing   | existing    |
-| C   | Builder form                    | Existing   | existing    |
-| D   | Resume templates & preview      | Existing   | existing    |
-| E   | PDF export                      | Existing   | existing    |
-| F   | PDF import                      | Existing   | existing    |
-| G   | Local persistence               | Existing   | existing    |
-| H   | i18n (EN/PL)                    | Existing   | existing    |
-| I   | Theme (light/dark/system)       | Existing   | existing    |
-| J   | PWA & offline                   | Existing   | existing    |
-| K   | SEO                             | Existing   | existing    |
-| 1   | Coding standards & AGENTS.md    | Foundation | done        |
-| 2   | Stack review                    | Foundation | in-progress |
-| 3   | Upgrades & replacements         | Foundation | done        |
-| 17  | Unified radix-ui package        | Foundation | done        |
-| 18  | Intl dates instead of date-fns  | Foundation | done        |
-| 19  | Single CSP source               | Foundation | done        |
-| 20  | React Compiler                  | Foundation | planned     |
-| 4   | Feature based folder structure  | Foundation | planned     |
-| 5   | Performance budgets             | Foundation | planned     |
-| 6   | Design system refresh           | Foundation | planned     |
-| 7   | Builder page split              | Slice 1    | planned     |
-| 8   | Shared template model           | Slice 1    | planned     |
-| 9   | PDF import parser restructure   | Slice 1    | planned     |
-| 10  | Lazy load heavy engines         | Slice 2    | planned     |
-| 11  | Builder responsiveness          | Slice 2    | planned     |
-| 12  | Landing page refresh            | Slice 3    | planned     |
-| 13  | Template gallery refresh        | Slice 3    | planned     |
-| 14  | Builder UI refresh              | Slice 3    | planned     |
-| 15  | Preview & export UI refresh     | Slice 3    | planned     |
-| 16  | Accessibility & Lighthouse pass | Slice 3    | planned     |
+| #   | Feature                         | Phase      | Status   |
+| --- | ------------------------------- | ---------- | -------- |
+| A   | Landing page                    | Existing   | existing |
+| B   | Template gallery & detail       | Existing   | existing |
+| C   | Builder form                    | Existing   | existing |
+| D   | Resume templates & preview      | Existing   | existing |
+| E   | PDF export                      | Existing   | existing |
+| F   | PDF import                      | Existing   | existing |
+| G   | Local persistence               | Existing   | existing |
+| H   | i18n (EN/PL)                    | Existing   | existing |
+| I   | Theme (light/dark/system)       | Existing   | existing |
+| J   | PWA & offline                   | Existing   | existing |
+| K   | SEO                             | Existing   | existing |
+| 1   | Coding standards & AGENTS.md    | Foundation | done     |
+| 2   | Stack review                    | Foundation | done     |
+| 3   | Upgrades & replacements         | Foundation | done     |
+| 17  | Unified radix-ui package        | Foundation | done     |
+| 18  | Intl dates instead of date-fns  | Foundation | done     |
+| 19  | Single CSP source               | Foundation | done     |
+| 20  | React Compiler                  | Foundation | done     |
+| 4   | Feature based folder structure  | Foundation | planned  |
+| 5   | Performance budgets             | Foundation | planned  |
+| 6   | Design system refresh           | Foundation | planned  |
+| 7   | Builder page split              | Slice 1    | planned  |
+| 8   | Shared template model           | Slice 1    | planned  |
+| 9   | PDF import parser restructure   | Slice 1    | planned  |
+| 10  | Lazy load heavy engines         | Slice 2    | planned  |
+| 11  | Builder responsiveness          | Slice 2    | planned  |
+| 12  | Landing page refresh            | Slice 3    | planned  |
+| 13  | Template gallery refresh        | Slice 3    | planned  |
+| 14  | Builder UI refresh              | Slice 3    | planned  |
+| 15  | Preview & export UI refresh     | Slice 3    | planned  |
+| 16  | Accessibility & Lighthouse pass | Slice 3    | planned  |
 
 ## Already built
 
@@ -100,7 +100,7 @@ Capture the real conventions (CLAUDE.md rules, folder layout, testing, i18n, tem
 
 - [x] Capture conventions: `/audit`
 
-### 2. Stack review · in-progress
+### 2. Stack review · done
 
 Check every layer (build, router, forms, validation, UI primitives, animation, PDF render, PDF parse, dates, lint/format, tests, PWA) against current best practice and decide keep, upgrade, or replace for each.
 **Done when:** a spec records a verdict and reason per layer, and every replacement is enrolled here as its own row.
@@ -145,13 +145,13 @@ spec [0001](../specs/0001-stack-review/index.md) (build plan step 10). code in `
 
 - [x] Build it: `/develop single csp source`
 
-### 20. React Compiler · from spec 0001
+### 20. React Compiler · done · from spec 0001
 
 Turn on the React Compiler in the build and the tests, with the React hooks v7 lint rules.
 **Done when:** the compiler runs in build and tests, lint reports compiler rules, and the builder behaves as before.
-spec [0001](../specs/0001-stack-review/index.md) (build plan step 11)
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 11). code in `vite.config.ts`, `vitest.config.ts`
 
-- [ ] Build it: `/develop react compiler`
+- [x] Build it: `/develop react compiler`
 
 ### 4. Feature based folder structure · needs a decision
 

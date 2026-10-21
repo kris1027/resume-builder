@@ -12,7 +12,9 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - [x] DevTools offline: open `/preview` with saved data → PDF preview renders; Download PDF works; load the PDF on `/builder` → fields come back. Fonts are served by the service worker even with the `?v=` query → AC-4
 - [x] Gallery card for the developer template, side by side with the live site → GitHub and LinkedIn icons look the same → AC-6
 - [x] Feature 17 (`radix-ui`): rerun the AC-2 route matrix in the production preview, then on `/builder` open the language and theme menus (DropdownMenu), tick and untick a checkbox through its label (Checkbox, Label), pick a level in a language Select, open and close a date Popover, open and cancel the Reset AlertDialog, and follow the Back to Templates link (`Button asChild`, Slot) → all 28 route combinations and every primitive behave as before, no console errors → AC-2, AC-9
-- [ ] Feature 18 (`Intl` dates): with sample data that has work and education dates, check in EN and PL the builder date picker month lists, the three gallery cards, and `/preview` for each template (developer long month, default and veterinary short month, years on education) → month names and casing match the pinned strings in `date-format.test.ts`, e.g. `styczeń 2024` / `sty 2024` → AC-5
+- [x] Feature 18 (`Intl` dates): with sample data that has work and education dates, check in EN and PL the builder date picker month lists, the three gallery cards, and `/preview` for each template (developer long month, default and veterinary short month, years on education) → month names and casing match the pinned strings in `date-format.test.ts`, e.g. `styczeń 2024` / `sty 2024` → AC-5 (2026-10-21, production preview: EN `January 2024` / `Jan 2024`, PL `styczeń 2024` / `sty 2024`, picker months `Jan`…`Dec` and `sty`…`gru`, education shows years only)
+- [x] Feature 20 (React Compiler): in the production preview on `/builder`, type in a text field, add and remove an experience entry, drag one experience entry below another, and type an invalid email then blur → typing keeps every character, entries add, remove and swap order, the email error shows only after touch and clears once fixed, no console errors → AC-8
+- [x] Feature 20: type 55 characters into Professional Title on `/builder` in the production preview, with and without the compiler, and record the timing in the PR (informational, no threshold) → AC-8 (recorded in the PR)
 
 ## Commands
 
@@ -30,6 +32,10 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - [x] Feature 19: `pnpm build`, then compare the `<meta http-equiv="Content-Security-Policy">` content in `dist/index.html` with the `vercel.json` value → identical → AC-7
 - [x] Feature 19: rename the header key in `vercel.json` and run `pnpm exec vite build` → fails with `vercel.json is missing the Content-Security-Policy header on "/(.*)"`; restore the file → AC-7
 - [x] Feature 19: on the PR preview deployment, `vercel curl <preview>/` and `<preview>/builder` → the `Content-Security-Policy` response header equals the meta tag in the served HTML, and `/builder` still returns 200 through the SPA rewrite → AC-7, AC-2
+- [x] Feature 20: `pnpm build`, then `grep -l memo_cache_sentinel dist/assets/*.js` → compiled chunks found (10, builder chunk included) → AC-8
+- [x] Feature 20: in a throwaway test, `expect(LanguageToggle.toString()).toContain('memo_cache_sentinel')` under `pnpm test` → passes, so Vitest runs compiled components; delete the test after → AC-8
+- [x] Feature 20: `pnpm exec eslint --print-config src/main.tsx` lists the compiler rules (`react-hooks/purity`, `refs`, `immutability`, `set-state-in-render` and others); `pnpm lint` → clean → AC-8
+- [x] Feature 20: `pnpm test` → 141 passed with the compiler on → AC-8
 
 ## Acceptance criteria coverage
 
@@ -39,7 +45,7 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - AC-4: Cache Storage listing, offline preview, export and import
 - AC-5: date-fns pin check plus the EN/PL visual pass (feature 18)
 - AC-7: single source grep, built meta versus `vercel.json`, the missing header guard, and the preview header check (feature 19)
-- AC-8: belongs to feature 20, not this one
+- AC-8: compiled output in build and tests, compiler lint rules, the builder smoke pass and the typing profile in the PR (feature 20)
 - AC-6: icon side by side
 - AC-9: devtools and react-day-picker gone here, `@radix-ui/react-*` gone in feature 17, `date-fns` gone in feature 18
 - AC-10: chunk table in the PR

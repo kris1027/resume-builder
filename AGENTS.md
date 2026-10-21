@@ -5,7 +5,7 @@ Free, no sign up resume builder (EN/PL). The user fills a form, picks one of thr
 ## Stack
 
 - **Language / Runtime**: TypeScript 6 (strict), React 19, Node 24 (`.nvmrc`)
-- **Framework**: Vite 8 SPA, TanStack Router (file routes in `src/routes/`, `src/routeTree.gen.ts` is generated, never edit it)
+- **Framework**: Vite 8 SPA, TanStack Router (file routes in `src/routes/`, `src/routeTree.gen.ts` is generated, never edit it), React Compiler via `@rolldown/plugin-babel`, set up once in `react-plugins.ts` and used by both `vite.config.ts` and `vitest.config.ts`
 - **Key dependencies**: TanStack Form + Zod 4, Tailwind 4 + shadcn style Radix primitives from the unified `radix-ui` package (`src/components/ui/`), `@react-pdf/renderer` (render) + `pdfjs-dist` (parse), react-i18next, motion, vite-plugin-pwa
 - **Package manager**: pnpm 12 (`packageManager` in `package.json`)
 - **Hosting**: Vercel (`vercel.json`: SPA rewrite plus CSP; keep it in sync with the CSP in `vite.config.ts`)
@@ -28,7 +28,7 @@ pnpm pre-commit       # All of the above; run before pushing
 
 ## Specs
 
-Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`. Scope lives in `docs/scope/scope.md`.
+Stored in `docs/specs/`. Format: one folder per spec, `docs/specs/NNNN-title/` with `index.md` (plus `rationale.md` and `verify.md`). Scope lives in `docs/scope/scope.md`.
 
 ## Rules
 
@@ -40,6 +40,7 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`. Scope lives in `doc
 - Templates: `developer`, `default`, `veterinary` (`src/lib/template-ids.ts`). Each exists twice: an HTML version in `src/components/templates/` (gallery card previews only) and a PDF version in `src/lib/pdf-templates/` (preview, detail page, export). A new resume section must land in all three templates, in both versions, plus the PDF import parser.
 - Templates are always white and never animated; dark mode and motion apply only to the surrounding UI. Language levels use the European framework: A1 to C2 plus `NATIVE`.
 - GDPR clause, when enabled, renders at the bottom of every template: `cv.gdprConsent` with a company name, `cv.gdprConsentGeneric` without.
+- React Compiler: compiles every component and memoizes for you, so skip new `useMemo`/`useCallback`/`memo` written only for speed. If a component misbehaves under it, opt that one out with `'use no memo'` plus a comment naming the reason; never turn the compiler off globally. The `react-hooks` lint rules (v7 `flat.recommended`) flag code it cannot compile.
 - Animations: respect `prefers-reduced-motion`, parallax only on decorative layers (never text), `viewport: { once: true }` on every `whileInView` (shared variants in `src/lib/animation-variants.ts`).
 - Storage: always go through `safeStorage` (`src/lib/storage.ts`, falls back to memory). Keys: `resumeData`, `resumeData_backup` (manual save, survives reset), `resumeData_lastSaved`, plus `theme`, `language`, `privacyNoticeAccepted`, `pwaInstallDismissed`. Breaking the saved shape is allowed this pass.
 - Template choice travels as `?templateId=` on `/builder` and `/preview`; the gallery detail page uses the path `/templates/$templateId`.

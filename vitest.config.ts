@@ -1,7 +1,9 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
+import { reactPlugins } from './react-plugins.ts';
 
 export default defineConfig({
+    plugins: reactPlugins(),
     resolve: {
         alias: {
             '@': resolve(import.meta.dirname, 'src'),
