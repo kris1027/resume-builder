@@ -27,7 +27,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 1   | Coding standards & AGENTS.md    | Foundation | done        |
 | 2   | Stack review                    | Foundation | in-progress |
 | 3   | Upgrades & replacements         | Foundation | done        |
-| 17  | Unified radix-ui package        | Foundation | planned     |
+| 17  | Unified radix-ui package        | Foundation | in-progress |
 | 18  | Intl dates instead of date-fns  | Foundation | planned     |
 | 19  | Single CSP source               | Foundation | planned     |
 | 20  | React Compiler                  | Foundation | planned     |
@@ -125,9 +125,9 @@ code in `package.json`, `pnpm-workspace.yaml`, `vite.config.ts`, `eslint.config.
 
 Swap the seven `@radix-ui/react-*` packages for the single `radix-ui` package; same components, only import paths change.
 **Done when:** no `@radix-ui/react-*` entry is left in `package.json` and every dialog, select, popover and menu works as before.
-spec [0001](../specs/0001-stack-review/index.md) (build plan step 8)
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 8). code in `src/components/ui/`
 
-- [ ] Build it: `/develop unified radix-ui package`
+- [x] Build it: `/develop unified radix-ui package`
 
 ### 18. Intl dates instead of date-fns · from spec 0001
 
