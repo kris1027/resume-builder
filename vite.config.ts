@@ -5,20 +5,16 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import vercelConfig from './vercel.json' with { type: 'json' };
 
-const contentSecurityPolicy = [
-    "default-src 'self'",
-    "script-src 'self' 'wasm-unsafe-eval'",
-    "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob:",
-    "font-src 'self' data:",
-    "connect-src 'self' data: blob:",
-    "frame-src 'self' blob:",
-    "worker-src 'self' blob:",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-].join('; ');
+// vercel.json is the only place the CSP is written; the build meta tag reuses it
+const contentSecurityPolicy = vercelConfig.headers
+    .find((rule) => rule.source === '/(.*)')
+    ?.headers.find((header) => header.key === 'Content-Security-Policy')?.value;
+
+if (!contentSecurityPolicy) {
+    throw new Error('vercel.json is missing the Content-Security-Policy header on "/(.*)"');
+}
 
 const htmlCsp = (): Plugin => ({
     name: 'html-csp',
