@@ -25,7 +25,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | J   | PWA & offline                   | Existing   | existing    |
 | K   | SEO                             | Existing   | existing    |
 | 1   | Coding standards & AGENTS.md    | Foundation | done        |
-| 2   | Stack review                    | Foundation | in-progress |
+| 2   | Stack review                    | Foundation | done        |
 | 3   | Upgrades & replacements         | Foundation | done        |
 | 17  | Unified radix-ui package        | Foundation | done        |
 | 18  | Intl dates instead of date-fns  | Foundation | done        |
@@ -100,7 +100,7 @@ Capture the real conventions (CLAUDE.md rules, folder layout, testing, i18n, tem
 
 - [x] Capture conventions: `/audit`
 
-### 2. Stack review · in-progress
+### 2. Stack review · done
 
 Check every layer (build, router, forms, validation, UI primitives, animation, PDF render, PDF parse, dates, lint/format, tests, PWA) against current best practice and decide keep, upgrade, or replace for each.
 **Done when:** a spec records a verdict and reason per layer, and every replacement is enrolled here as its own row.
