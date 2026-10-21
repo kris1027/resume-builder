@@ -26,6 +26,10 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - [x] `pnpm build` → compare chunk sizes against the table in the PR description → AC-10 (table recorded in PR #86)
 - [x] Feature 18: `format()` from date-fns 4.1.0 with `enUS` and `pl` (`LLLL yyyy`, `LLL yyyy`, `LLLL`, `LLL`, all 12 months of 2024) → all 48 strings equal the pins in `src/lib/date-format.test.ts` → AC-5
 - [x] `grep date-fns package.json pnpm-lock.yaml` and `grep -r date-fns src` → no match except the pin comment in `date-format.test.ts` → AC-9 (feature 18)
+- [x] Feature 19: `grep -rn "Content-Security-Policy" --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git . | grep -v docs/` → only `vercel.json` holds the policy; `vite.config.ts` names the header key, not the value → AC-7
+- [x] Feature 19: `pnpm build`, then compare the `<meta http-equiv="Content-Security-Policy">` content in `dist/index.html` with the `vercel.json` value → identical → AC-7
+- [x] Feature 19: rename the header key in `vercel.json` and run `pnpm exec vite build` → fails with `vercel.json is missing the Content-Security-Policy header on "/(.*)"`; restore the file → AC-7
+- [x] Feature 19: on the PR preview deployment, `vercel curl <preview>/` and `<preview>/builder` → the `Content-Security-Policy` response header equals the meta tag in the served HTML, and `/builder` still returns 200 through the SPA rewrite → AC-7, AC-2
 
 ## Acceptance criteria coverage
 
@@ -34,7 +38,8 @@ _Steps derived from spec 0001 acceptance criteria. `/check verify` runs these; `
 - AC-3: export and import round trip per template, multi page toggle
 - AC-4: Cache Storage listing, offline preview, export and import
 - AC-5: date-fns pin check plus the EN/PL visual pass (feature 18)
-- AC-7, AC-8: belong to features 19 and 20, not this one
+- AC-7: single source grep, built meta versus `vercel.json`, the missing header guard, and the preview header check (feature 19)
+- AC-8: belongs to feature 20, not this one
 - AC-6: icon side by side
 - AC-9: devtools and react-day-picker gone here, `@radix-ui/react-*` gone in feature 17, `date-fns` gone in feature 18
 - AC-10: chunk table in the PR
