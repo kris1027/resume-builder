@@ -28,7 +28,7 @@ pnpm pre-commit       # All of the above; run before pushing
 
 ## Specs
 
-Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`. Scope lives in `docs/scope/scope.md`.
+Stored in `docs/specs/`. Format: one folder per spec, `docs/specs/NNNN-title/` with `index.md` (plus `rationale.md` and `verify.md`). Scope lives in `docs/scope/scope.md`.
 
 ## Rules
 
