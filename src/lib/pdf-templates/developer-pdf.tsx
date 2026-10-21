@@ -2,7 +2,7 @@ import '@/lib/pdf-fonts';
 import { Document, Page, View, Text, Link, StyleSheet } from '@react-pdf/renderer';
 import type { ResumeData } from '@/types/form-types';
 import { formatWebsiteDisplay, formatGithubDisplay, formatLinkedinDisplay } from '@/lib/utils';
-import { formatCVDate } from '@/lib/date-utils';
+import { formatCVDate } from '@/lib/date-format';
 import type { AppLang } from '@/lib/app-lang';
 import { getPDFStrings } from '@/lib/pdf-translations';
 import { buildResumeMetadata } from '@/lib/pdf-parser';
