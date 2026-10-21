@@ -3,7 +3,8 @@ import { Document, Page, View, Text, Link, StyleSheet } from '@react-pdf/rendere
 import type { ResumeData } from '@/types/form-types';
 import { formatLinkedinDisplay } from '@/lib/utils';
 import { formatCVDateShort } from '@/lib/date-utils';
-import { getPDFStrings, type PDFLang } from '@/lib/pdf-translations';
+import type { AppLang } from '@/lib/app-lang';
+import { getPDFStrings } from '@/lib/pdf-translations';
 import { buildResumeMetadata } from '@/lib/pdf-parser';
 import {
     GlobeIcon,
@@ -16,7 +17,7 @@ import {
 interface VeterinaryPDFProps {
     data: ResumeData;
     compactScale?: number; // 0 = normal, 1 = maximum compact
-    lang?: PDFLang;
+    lang?: AppLang;
 }
 
 const C = {
