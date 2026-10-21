@@ -1,9 +1,9 @@
 import '@/lib/pdf-fonts';
 import { Document, Page, View, Text, Link, StyleSheet } from '@react-pdf/renderer';
 import type { ResumeData } from '@/types/form-types';
-import { format } from 'date-fns';
 import { formatLinkedinDisplay } from '@/lib/utils';
-import { getPDFStrings, getDateFnsLocale, type PDFLang } from '@/lib/pdf-translations';
+import { formatCVDateShort } from '@/lib/date-utils';
+import { getPDFStrings, type PDFLang } from '@/lib/pdf-translations';
 import { buildResumeMetadata } from '@/lib/pdf-parser';
 import {
     GlobeIcon,
@@ -150,16 +150,6 @@ function createStyles(t: number) {
     });
 }
 
-function formatPDFDateShort(
-    dateString: string,
-    locale: ReturnType<typeof getDateFnsLocale>,
-): string {
-    if (!dateString) return '';
-    const [year, month] = dateString.split('-');
-    const date = new Date(parseInt(year), parseInt(month) - 1);
-    return format(date, 'LLL yyyy', { locale });
-}
-
 function formatPDFYear(dateString: string): string {
     if (!dateString) return '';
     return dateString.split('-')[0];
@@ -177,7 +167,6 @@ export function DefaultPDF({ data, compactScale = 0, lang = 'en' }: DefaultPDFPr
     const styles = createStyles(compactScale);
     const iconSize = lerp(9, 7, compactScale);
     const str = getPDFStrings(lang);
-    const dateLocale = getDateFnsLocale(lang);
     const {
         personalInfo: p,
         experiences,
@@ -262,10 +251,10 @@ export function DefaultPDF({ data, compactScale = 0, lang = 'en' }: DefaultPDFPr
                                     <View style={styles.expTopRow}>
                                         <Text style={styles.expPosition}>{exp.position}</Text>
                                         <Text style={styles.expDate}>
-                                            {formatPDFDateShort(exp.startDate, dateLocale)} -{' '}
+                                            {formatCVDateShort(exp.startDate, lang)} -{' '}
                                             {exp.current
                                                 ? str.present
-                                                : formatPDFDateShort(exp.endDate, dateLocale)}
+                                                : formatCVDateShort(exp.endDate, lang)}
                                         </Text>
                                     </View>
                                     <View style={styles.expCompanyRow}>

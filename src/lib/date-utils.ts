@@ -1,31 +1,45 @@
-import { format } from 'date-fns';
-import type { Locale } from 'date-fns';
-import { enUS, pl } from 'date-fns/locale';
 import i18n from '@/i18n/config';
 
-const localeMap: Record<string, Locale> = {
-    en: enUS,
-    pl: pl,
+export type DateLang = 'en' | 'pl';
+type MonthStyle = 'long' | 'short';
+
+const localeTags: Record<DateLang, string> = {
+    en: 'en-US',
+    pl: 'pl-PL',
 };
 
-const getLocale = (): Locale => {
+const formatters = new Map<string, Intl.DateTimeFormat>();
+
+const getFormatter = (lang: DateLang, style: MonthStyle, withYear: boolean) => {
+    const key = `${lang}-${style}-${withYear}`;
+    let formatter = formatters.get(key);
+    if (!formatter) {
+        formatter = new Intl.DateTimeFormat(localeTags[lang], {
+            month: style,
+            ...(withYear && { year: 'numeric' }),
+        });
+        formatters.set(key, formatter);
+    }
+    return formatter;
+};
+
+const getCurrentLang = (): DateLang => {
     const lang = (i18n.resolvedLanguage ?? i18n.language)?.split('-')[0];
-    return (lang ? localeMap[lang] : undefined) ?? enUS;
+    return lang === 'pl' ? 'pl' : 'en';
 };
 
-export const formatCVDate = (dateString: string): string => {
+const formatMonthYear = (dateString: string, style: MonthStyle, lang: DateLang): string => {
     if (!dateString) return '';
     const [year, month] = dateString.split('-');
     const date = new Date(parseInt(year), parseInt(month) - 1);
-    return format(date, 'LLLL yyyy', { locale: getLocale() });
+    return getFormatter(lang, style, true).format(date);
 };
 
-export const formatCVDateShort = (dateString: string): string => {
-    if (!dateString) return '';
-    const [year, month] = dateString.split('-');
-    const date = new Date(parseInt(year), parseInt(month) - 1);
-    return format(date, 'LLL yyyy', { locale: getLocale() });
-};
+export const formatCVDate = (dateString: string, lang: DateLang = getCurrentLang()): string =>
+    formatMonthYear(dateString, 'long', lang);
+
+export const formatCVDateShort = (dateString: string, lang: DateLang = getCurrentLang()): string =>
+    formatMonthYear(dateString, 'short', lang);
 
 export const formatCVYear = (dateString: string): string => {
     if (!dateString) return '';
@@ -33,8 +47,7 @@ export const formatCVYear = (dateString: string): string => {
     return year;
 };
 
-export const getMonthNames = (short = false): string[] => {
-    const locale = getLocale();
-    const formatStr = short ? 'LLL' : 'LLLL';
-    return Array.from({ length: 12 }, (_, i) => format(new Date(2024, i), formatStr, { locale }));
+export const getMonthNames = (style: MonthStyle, lang: DateLang = getCurrentLang()): string[] => {
+    const formatter = getFormatter(lang, style, false);
+    return Array.from({ length: 12 }, (_, i) => formatter.format(new Date(2024, i)));
 };

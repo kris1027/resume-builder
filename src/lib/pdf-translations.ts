@@ -1,14 +1,7 @@
-import { enUS, pl } from 'date-fns/locale';
-import type { Locale } from 'date-fns';
-
 export type PDFLang = 'en' | 'pl';
 
 export function normalizePDFLang(lang: string): PDFLang {
     return lang.startsWith('pl') ? 'pl' : 'en';
-}
-
-export function getDateFnsLocale(lang: PDFLang): Locale {
-    return lang === 'pl' ? pl : enUS;
 }
 
 interface PDFStrings {
