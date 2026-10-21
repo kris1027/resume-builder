@@ -30,7 +30,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 17  | Unified radix-ui package        | Foundation | done        |
 | 18  | Intl dates instead of date-fns  | Foundation | done        |
 | 19  | Single CSP source               | Foundation | done        |
-| 20  | React Compiler                  | Foundation | in-progress |
+| 20  | React Compiler                  | Foundation | done        |
 | 4   | Feature based folder structure  | Foundation | planned     |
 | 5   | Performance budgets             | Foundation | planned     |
 | 6   | Design system refresh           | Foundation | planned     |
@@ -145,13 +145,13 @@ spec [0001](../specs/0001-stack-review/index.md) (build plan step 10). code in `
 
 - [x] Build it: `/develop single csp source`
 
-### 20. React Compiler · in-progress · from spec 0001
+### 20. React Compiler · done · from spec 0001
 
 Turn on the React Compiler in the build and the tests, with the React hooks v7 lint rules.
 **Done when:** the compiler runs in build and tests, lint reports compiler rules, and the builder behaves as before.
 spec [0001](../specs/0001-stack-review/index.md) (build plan step 11). code in `vite.config.ts`, `vitest.config.ts`
 
-- [ ] Build it: `/develop react compiler`
+- [x] Build it: `/develop react compiler`
 
 ### 4. Feature based folder structure · needs a decision
 
