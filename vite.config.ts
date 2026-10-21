@@ -1,12 +1,11 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import type { Plugin } from 'vite';
-import react, { reactCompilerPreset } from '@vitejs/plugin-react';
-import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import vercelConfig from './vercel.json' with { type: 'json' };
+import { reactPlugins } from './react-plugins.ts';
 
 // vercel.json is the only place the CSP is written; the build meta tag reuses it
 const contentSecurityPolicy = vercelConfig.headers
@@ -37,8 +36,7 @@ export default defineConfig(({ command }) => ({
             target: 'react',
             autoCodeSplitting: true,
         }),
-        react(),
-        babel({ presets: [reactCompilerPreset()] }),
+        ...reactPlugins(),
         tailwindcss(),
         VitePWA({
             registerType: 'autoUpdate',

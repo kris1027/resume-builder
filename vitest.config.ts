@@ -1,11 +1,9 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
-import react, { reactCompilerPreset } from '@vitejs/plugin-react';
-import babel from '@rolldown/plugin-babel';
+import { reactPlugins } from './react-plugins.ts';
 
 export default defineConfig({
-    // same compiler as vite.config.ts, so tests run the memoized components
-    plugins: [react(), babel({ presets: [reactCompilerPreset()] })],
+    plugins: reactPlugins(),
     resolve: {
         alias: {
             '@': resolve(import.meta.dirname, 'src'),
