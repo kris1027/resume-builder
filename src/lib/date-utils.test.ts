@@ -1,0 +1,95 @@
+import { afterEach, describe, expect, it } from 'vitest';
+
+import i18n from '@/i18n/config';
+
+import { formatCVDate, formatCVDateShort, formatCVYear, getMonthNames } from './date-utils';
+
+// Pinned against the date-fns output these helpers replaced ('LLLL yyyy', 'LLL yyyy', 'LLLL', 'LLL')
+const LONG = {
+    en: [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+    ],
+    pl: [
+        'styczeń',
+        'luty',
+        'marzec',
+        'kwiecień',
+        'maj',
+        'czerwiec',
+        'lipiec',
+        'sierpień',
+        'wrzesień',
+        'październik',
+        'listopad',
+        'grudzień',
+    ],
+};
+
+const SHORT = {
+    en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    pl: ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'],
+};
+
+const LANGS = ['en', 'pl'] as const;
+const MONTHS = Array.from({ length: 12 }, (_, i) => `2024-${String(i + 1).padStart(2, '0')}`);
+
+describe('date-utils', () => {
+    afterEach(async () => {
+        await i18n.changeLanguage('en');
+    });
+
+    describe.each(LANGS)('in %s', (lang) => {
+        it('should format the long month and year when given each of the 12 months', () => {
+            expect(MONTHS.map((d) => formatCVDate(d, lang))).toEqual(
+                LONG[lang].map((m) => `${m} 2024`),
+            );
+        });
+
+        it('should format the short month and year when given each of the 12 months', () => {
+            expect(MONTHS.map((d) => formatCVDateShort(d, lang))).toEqual(
+                SHORT[lang].map((m) => `${m} 2024`),
+            );
+        });
+
+        it('should list the long month names when asked for the long style', () => {
+            expect(getMonthNames('long', lang)).toEqual(LONG[lang]);
+        });
+
+        it('should list the short month names when asked for the short style', () => {
+            expect(getMonthNames('short', lang)).toEqual(SHORT[lang]);
+        });
+    });
+
+    it('should use the current i18n language when no language is given', async () => {
+        await i18n.changeLanguage('pl');
+        expect(formatCVDate('2024-01')).toBe('styczeń 2024');
+        expect(formatCVDateShort('2024-10')).toBe('paź 2024');
+        expect(getMonthNames('short')[0]).toBe('sty');
+    });
+
+    it('should fall back to English when the i18n language is unsupported', async () => {
+        await i18n.changeLanguage('de');
+        expect(formatCVDate('2024-03')).toBe('March 2024');
+    });
+
+    it('should return an empty string when the date is empty', () => {
+        expect(formatCVDate('')).toBe('');
+        expect(formatCVDateShort('')).toBe('');
+        expect(formatCVYear('')).toBe('');
+    });
+
+    it('should return the year when given a year and month', () => {
+        expect(formatCVYear('2024-05')).toBe('2024');
+    });
+});
