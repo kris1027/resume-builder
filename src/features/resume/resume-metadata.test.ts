@@ -34,7 +34,7 @@ describe('embedded resume metadata round-trip', () => {
         gdprConsent: { enabled: true, companyName: 'Babbage Ltd' },
     };
 
-    it('builds and parses back to equivalent form values including templateId', () => {
+    it('should parse back to the same form values and templateId when built from resume data', () => {
         const raw = buildResumeMetadata('veterinary', data);
         const parsed = parseResumeMetadata(raw);
 
@@ -46,7 +46,7 @@ describe('embedded resume metadata round-trip', () => {
         expect(parsed?.gdprConsent).toEqual(data.gdprConsent);
     });
 
-    it('returns null for undefined, non-JSON, or unknown-version input', () => {
+    it('should return null when the input is undefined, not JSON, or an unknown version', () => {
         expect(parseResumeMetadata(undefined)).toBeNull();
         expect(parseResumeMetadata('Mathematics, Logic')).toBeNull();
         expect(
