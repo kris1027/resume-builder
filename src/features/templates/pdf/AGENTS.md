@@ -9,6 +9,7 @@ The three resume templates rendered with `@react-pdf/renderer`. They drive the l
 | File                                                                | Owns                                                                          |
 | ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | `src/features/templates/pdf/{developer,default,veterinary}-pdf.tsx` | One PDF component per template, props `data`, `compactScale`, `lang`          |
+| `src/features/templates/pdf/template-pdf.tsx`                       | `TemplatePDF`: picks the PDF component by template id, for preview and export |
 | `src/features/templates/pdf/pdf-icons.tsx`                          | Contact icons drawn as react-pdf SVG                                          |
 | `src/features/templates/pdf/pdf-translations.ts`                    | EN/PL strings for PDFs (`getPDFStrings`)                                      |
 | `src/lib/date-format.ts`                                            | Month and year via `Intl.DateTimeFormat`, `lang` required                     |
@@ -18,7 +19,7 @@ The three resume templates rendered with `@react-pdf/renderer`. They drive the l
 | `src/features/pdf/pdf-export.tsx`                                   | Download (`exportToPDF`), page counting, filename                             |
 | `src/features/pdf/pdf-parser.ts`                                    | Import: embedded metadata first, text parsing fallback                        |
 | `src/features/pdf/pdfjs-singleton.ts`                               | Lazy pdfjs load, worker at `public/pdf.worker.min.mjs`                        |
-| `src/features/preview/preview-page.tsx`                             | Picks the PDF component and searches for the compact scale that fits one page |
+| `src/features/preview/preview-page.tsx`                             | Searches for the compact scale that fits one page                             |
 
 ## Conventions
 

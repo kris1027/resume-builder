@@ -1,7 +1,6 @@
 import { memo, useEffect, useMemo, useState, type ReactElement } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
-import type { ResumeData } from '@/features/resume/form-types';
 import { ArrowLeft, Download, Edit, Loader2, FileWarning, FileText, Files } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageToggle } from '@/components/language-toggle';
@@ -9,7 +8,7 @@ import { exportToPDF, countPdfPages, generateResumeFilename } from '@/features/p
 import { TEMPLATE_IDS } from '@/lib/template-ids';
 import type { TemplateId } from '@/lib/template-ids';
 import { useTranslation } from 'react-i18next';
-import { normalizeLang, type AppLang } from '@/lib/app-lang';
+import { normalizeLang } from '@/lib/app-lang';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -21,22 +20,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { loadStoredResume } from '@/features/resume/stored-resume';
 import { PDFViewer, type DocumentProps } from '@react-pdf/renderer';
-import { DeveloperPDF } from '@/features/templates/pdf/developer-pdf';
-import { DefaultPDF } from '@/features/templates/pdf/default-pdf';
-import { VeterinaryPDF } from '@/features/templates/pdf/veterinary-pdf';
-
-function getPdfDocument(
-    resumeData: ResumeData,
-    templateId: TemplateId,
-    compactScale: number,
-    lang: AppLang,
-) {
-    if (templateId === 'developer')
-        return <DeveloperPDF data={resumeData} compactScale={compactScale} lang={lang} />;
-    if (templateId === 'default')
-        return <DefaultPDF data={resumeData} compactScale={compactScale} lang={lang} />;
-    return <VeterinaryPDF data={resumeData} compactScale={compactScale} lang={lang} />;
-}
+import { TemplatePDF } from '@/features/templates/pdf/template-pdf';
 
 const PdfPreview = memo(function PdfPreview({
     document,
@@ -112,7 +96,14 @@ export const PreviewPage = () => {
         async function run() {
             const { pdf } = await import('@react-pdf/renderer');
 
-            const normalBlob = await pdf(getPdfDocument(resumeData!, templateId, 0, lang)).toBlob();
+            const normalBlob = await pdf(
+                <TemplatePDF
+                    data={resumeData!}
+                    templateId={templateId}
+                    compactScale={0}
+                    lang={lang}
+                />,
+            ).toBlob();
             if (cancelled) return;
 
             const pages = await countPdfPages(normalBlob);
@@ -124,7 +115,14 @@ export const PreviewPage = () => {
             setIsMultiPage(true);
 
             const scale = await findMinCompactScale((s) =>
-                pdf(getPdfDocument(resumeData!, templateId, s, lang)).toBlob(),
+                pdf(
+                    <TemplatePDF
+                        data={resumeData!}
+                        templateId={templateId}
+                        compactScale={s}
+                        lang={lang}
+                    />,
+                ).toBlob(),
             );
             if (!cancelled) {
                 setOptimalScale(scale === null ? 'cannot-fit' : scale);
@@ -166,7 +164,15 @@ export const PreviewPage = () => {
 
     const activeScale = useCompact && typeof optimalScale === 'number' ? optimalScale : 0;
     const pdfDocument = useMemo(
-        () => (resumeData ? getPdfDocument(resumeData, templateId, activeScale, lang) : null),
+        () =>
+            resumeData ? (
+                <TemplatePDF
+                    data={resumeData}
+                    templateId={templateId}
+                    compactScale={activeScale}
+                    lang={lang}
+                />
+            ) : null,
         [resumeData, templateId, activeScale, lang],
     );
     // Hide toggle entirely when content can't fit even at max compaction

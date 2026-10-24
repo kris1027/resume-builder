@@ -17,23 +17,19 @@ export async function exportToPDF(
     const { filename = 'resume.pdf', compactScale = 0, lang: rawLang = 'en' } = options;
     const lang = normalizeLang(rawLang);
 
-    const [{ pdf }, { DeveloperPDF }, { DefaultPDF }, { VeterinaryPDF }] = await Promise.all([
+    const [{ pdf }, { TemplatePDF }] = await Promise.all([
         import('@react-pdf/renderer'),
-        import('@/features/templates/pdf/developer-pdf'),
-        import('@/features/templates/pdf/default-pdf'),
-        import('@/features/templates/pdf/veterinary-pdf'),
+        import('@/features/templates/pdf/template-pdf'),
     ]);
 
-    const element =
-        templateId === 'developer' ? (
-            <DeveloperPDF data={resumeData} compactScale={compactScale} lang={lang} />
-        ) : templateId === 'default' ? (
-            <DefaultPDF data={resumeData} compactScale={compactScale} lang={lang} />
-        ) : (
-            <VeterinaryPDF data={resumeData} compactScale={compactScale} lang={lang} />
-        );
-
-    const blob = await pdf(element).toBlob();
+    const blob = await pdf(
+        <TemplatePDF
+            data={resumeData}
+            templateId={templateId}
+            compactScale={compactScale}
+            lang={lang}
+        />,
+    ).toBlob();
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
