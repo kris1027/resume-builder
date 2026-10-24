@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { PreviewPage } from '@/pages/preview-page';
+import { PreviewPage } from '@/features/preview/preview-page';
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/seo';
 
 export const Route = createFileRoute('/preview')({
