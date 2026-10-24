@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { TemplatePage } from '@/pages/template-page';
+import { TemplatePage } from '@/features/gallery/template-page';
 import { SITE_URL, SEO_DEFAULTS, TEMPLATE_NAMES } from '@/lib/seo';
 import type { TemplateId } from '@/lib/template-ids';
 

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { TemplatesPage } from '@/pages/templates-page';
+import { TemplatesPage } from '@/features/gallery/templates-page';
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/seo';
 
 export const Route = createFileRoute('/templates')({

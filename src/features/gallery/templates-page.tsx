@@ -10,9 +10,9 @@ import {
     FileText,
     Heart,
 } from 'lucide-react';
-import { DeveloperPreview } from '@/components/template-previews/developer-preview';
-import { DefaultPreview } from '@/components/template-previews/default-preview';
-import { VeterinaryPreview } from '@/components/template-previews/veterinary-preview';
+import { DeveloperPreview } from '@/features/gallery/developer-preview';
+import { DefaultPreview } from '@/features/gallery/default-preview';
+import { VeterinaryPreview } from '@/features/gallery/veterinary-preview';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageToggle } from '@/components/language-toggle';
 import { useState } from 'react';
