@@ -5,7 +5,7 @@ import { formatWebsiteDisplay, formatGithubDisplay, formatLinkedinDisplay } from
 import { formatCVDate, formatCVYear } from '@/lib/date-format';
 import type { AppLang } from '@/lib/app-lang';
 import { getPDFStrings } from '@/lib/pdf-translations';
-import { buildResumeMetadata } from '@/lib/pdf-parser';
+import { buildResumeMetadata } from '@/lib/resume-metadata';
 import {
     GlobeIcon,
     GithubIcon,

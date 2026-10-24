@@ -6,66 +6,7 @@ vi.mock('pdfjs-dist', () => ({
     getDocument: vi.fn(),
 }));
 
-import {
-    buildResumeMetadata,
-    contactFromLinkUrls,
-    detectTemplate,
-    parseResumeFromText,
-    parseResumeMetadata,
-} from './pdf-parser';
-import type { ResumeData } from '@/types/form-types';
-
-describe('embedded resume metadata round-trip', () => {
-    const data: ResumeData = {
-        personalInfo: {
-            firstName: 'Ada',
-            lastName: 'Lovelace',
-            location: 'London, UK',
-            title: 'Engineer',
-            phone: '+441234567890',
-            email: 'ada@example.com',
-            website: '',
-            linkedin: '',
-            github: '',
-        },
-        experiences: [
-            {
-                company: 'Analytical Engine Co',
-                position: 'Programmer',
-                location: 'London',
-                startDate: '1843-01',
-                endDate: '',
-                current: true,
-                description: 'First algorithm',
-            },
-        ],
-        education: [],
-        skills: [{ name: 'Mathematics' }, { name: 'Logic' }],
-        languages: [{ language: 'English', proficiency: 'NATIVE' }],
-        interests: [{ name: 'Music' }],
-        gdprConsent: { enabled: true, companyName: 'Babbage Ltd' },
-    };
-
-    it('builds and parses back to equivalent form values including templateId', () => {
-        const raw = buildResumeMetadata('veterinary', data);
-        const parsed = parseResumeMetadata(raw);
-
-        expect(parsed).not.toBeNull();
-        expect(parsed?.templateId).toBe('veterinary');
-        expect(parsed?.personalInfo.firstName).toBe('Ada');
-        expect(parsed?.skills).toEqual(data.skills);
-        expect(parsed?.experiences[0].current).toBe(true);
-        expect(parsed?.gdprConsent).toEqual(data.gdprConsent);
-    });
-
-    it('returns null for undefined, non-JSON, or unknown-version input', () => {
-        expect(parseResumeMetadata(undefined)).toBeNull();
-        expect(parseResumeMetadata('Mathematics, Logic')).toBeNull();
-        expect(
-            parseResumeMetadata(JSON.stringify({ v: 99, data, templateId: 'default' })),
-        ).toBeNull();
-    });
-});
+import { contactFromLinkUrls, detectTemplate, parseResumeFromText } from './pdf-parser';
 
 describe('contactFromLinkUrls', () => {
     it('categorizes link-annotation URLs into contact fields', () => {

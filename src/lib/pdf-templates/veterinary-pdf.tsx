@@ -5,7 +5,7 @@ import { formatLinkedinDisplay } from '@/lib/utils';
 import { formatCVDateShort, formatCVYear } from '@/lib/date-format';
 import type { AppLang } from '@/lib/app-lang';
 import { getPDFStrings } from '@/lib/pdf-translations';
-import { buildResumeMetadata } from '@/lib/pdf-parser';
+import { buildResumeMetadata } from '@/lib/resume-metadata';
 import {
     GlobeIcon,
     LinkedinIcon,
