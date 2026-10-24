@@ -1,10 +1,10 @@
 import { HeadContent, Outlet } from '@tanstack/react-router';
-import { ThemeProvider } from '@/contexts/theme-context';
+import { ThemeProvider } from '@/components/theme-provider';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
-import { PrivacyNotice } from '@/components/privacy-notice';
-import { PwaReloadPrompt } from '@/components/pwa-reload-prompt';
-import { PwaInstallPrompt } from '@/components/pwa-install-prompt';
-import { OfflineIndicator } from '@/components/offline-indicator';
+import { PrivacyNotice } from '@/app/privacy-notice';
+import { PwaReloadPrompt } from '@/app/pwa-reload-prompt';
+import { PwaInstallPrompt } from '@/app/pwa-install-prompt';
+import { OfflineIndicator } from '@/app/offline-indicator';
 import { useTranslation } from 'react-i18next';
 
 export const RootLayout = () => {

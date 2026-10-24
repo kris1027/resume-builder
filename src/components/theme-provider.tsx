@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { ResolvedTheme, Theme } from '@/types/theme-context-types';
-import { ThemeContext } from '@/types/theme-context-types';
+import type { ResolvedTheme, Theme } from '@/lib/theme-context';
+import { ThemeContext } from '@/lib/theme-context';
 import { safeStorage } from '@/lib/storage';
 
 type ThemeProviderProps = {
