@@ -8,7 +8,11 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 // One way import rule from spec 0002: pages, then the resume domain, then shared code.
 const PAGE_AREAS = ['landing', 'gallery', 'builder', 'preview'];
-const noParent = { group: ['../*', '../**'], message: 'Use the @/ alias, never ../ (spec 0002).' };
+// A regex, not a glob, so a ../ in the middle of an alias path is caught too.
+const noParent = {
+    regex: '(^|/)\\.\\.(/|$)',
+    message: 'Use the @/ alias, never ../ (spec 0002).',
+};
 const ban = (paths, why) => ({ group: paths, message: `${why} (spec 0002).` });
 
 // ESLint applies the last matching block for a rule, so every block repeats noParent.
@@ -22,6 +26,8 @@ const entryBan = ban(
     ['@/app/**', '@/routes/**'],
     'Features and shared code never import the app shell or routes',
 );
+// Features and shared code sit below the app shell, so they always carry entryBan.
+const restrictBelowShell = (files, bans) => restrict(files, [...bans, entryBan]);
 
 export default defineConfig([
     globalIgnores(['dist', '.agents']),
@@ -45,43 +51,30 @@ export default defineConfig([
         },
     },
     { ...restrict(['src/**/*.{ts,tsx}'], []), ignores: ['src/routeTree.gen.ts'] },
-    restrict(
+    restrictBelowShell(
         ['src/{components,lib,hooks,i18n}/**/*.{ts,tsx}'],
-        [ban(['@/features/**'], 'Shared code never imports a feature area'), entryBan],
+        [ban(['@/features/**'], 'Shared code never imports a feature area')],
     ),
-    restrict(
+    restrictBelowShell(
         ['src/features/resume/**/*.{ts,tsx}'],
-        [
-            ban(
-                featureDirs([...PAGE_AREAS, 'templates', 'pdf']),
-                'resume is the bottom domain area',
-            ),
-            entryBan,
-        ],
+        [ban(featureDirs([...PAGE_AREAS, 'templates', 'pdf']), 'resume is the bottom domain area')],
     ),
-    restrict(
+    restrictBelowShell(
         ['src/features/templates/**/*.{ts,tsx}'],
-        [
-            ban(featureDirs([...PAGE_AREAS, 'pdf']), 'templates may import only resume and shared'),
-            entryBan,
-        ],
+        [ban(featureDirs([...PAGE_AREAS, 'pdf']), 'templates may import only resume and shared')],
     ),
-    restrict(
+    restrictBelowShell(
         ['src/features/pdf/**/*.{ts,tsx}'],
-        [
-            ban(featureDirs(PAGE_AREAS), 'pdf may import only templates, resume and shared'),
-            entryBan,
-        ],
+        [ban(featureDirs(PAGE_AREAS), 'pdf may import only templates, resume and shared')],
     ),
     ...PAGE_AREAS.map((area) =>
-        restrict(
+        restrictBelowShell(
             [`src/features/${area}/**/*.{ts,tsx}`],
             [
                 ban(
                     featureDirs(PAGE_AREAS.filter((a) => a !== area)),
                     'Page areas never import each other',
                 ),
-                entryBan,
             ],
         ),
     ),

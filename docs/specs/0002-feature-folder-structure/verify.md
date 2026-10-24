@@ -25,6 +25,7 @@ Add each import below on its own, run `pnpm lint`, expect an error that mentions
 - [ ] In `lib/utils.ts`: `import '@/features/resume/form-types';` (shared → feature)
 - [ ] In `features/landing/landing-page.tsx`: `import '@/app/root-layout';` (feature → app)
 - [ ] In `features/gallery/templates-page.tsx`: `import '../../lib/utils';` (parent relative path)
+- [ ] In `features/gallery/templates-page.tsx`: `import '@/features/gallery/../builder/builder-page';` (`../` inside an alias path)
 - [ ] With all of them removed, `pnpm lint` passes
 
 ## UI / manual (AC-7)

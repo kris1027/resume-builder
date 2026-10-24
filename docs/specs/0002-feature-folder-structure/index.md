@@ -19,7 +19,7 @@ This spec moves `src/` from folders grouped by kind (`components`, `lib`, `pages
 
 - **AC-1**: The top level of `src/` holds only `app/`, `features/`, `components/`, `lib/`, `hooks/`, `i18n/`, `locales/`, `routes/`, `test/`, `assets/` plus the files `main.tsx`, `index.css`, `vite-env.d.ts` and `routeTree.gen.ts`. The folders `pages/`, `contexts/`, `types/`, `data/`, `schemas/`, `components/form-sections/`, `components/templates/`, `components/template-previews/`, `components/icons/` and `lib/pdf-templates/` no longer exist, and every file sits where the move map below says.
 - **AC-2**: `src/features/` holds exactly seven areas: `landing`, `gallery`, `builder`, `preview`, `templates`, `pdf`, `resume`.
-- **AC-3**: `pnpm lint` fails with a message naming spec 0002 when any of these is added: a page area importing another page area; `resume` importing `templates` or `pdf`; `templates` importing `pdf`; a domain area importing a page area; shared code (`components/`, `lib/`, `hooks/`, `i18n/`) importing `features/`, `app/` or `routes/`; any feature importing `app/` or `routes/`; any import starting with `../`. With none of these present, `pnpm lint` passes.
+- **AC-3**: `pnpm lint` fails with a message naming spec 0002 when any of these is added: a page area importing another page area; `resume` importing `templates` or `pdf`; `templates` importing `pdf`; a domain area importing a page area; shared code (`components/`, `lib/`, `hooks/`, `i18n/`) importing `features/`, `app/` or `routes/`; any feature importing `app/` or `routes/`; any import with a `../` segment, at the start or inside an `@/` path. With none of these present, `pnpm lint` passes.
 - **AC-4**: There are no barrel files: no `index.ts` or `index.tsx` anywhere in `src/` except the route file `src/routes/index.tsx`, and no `export * from` lines in `src/` outside `routeTree.gen.ts`. The three single name pass throughs that exist today (`form-types.ts` → `ResumeFormValues`, `date-utils.ts` → `formatCVYear`, `test-utils.tsx` → Testing Library) may stay.
 - **AC-5**: No file under `features/templates/` imports from `features/pdf/`. `buildResumeMetadata` and `parseResumeMetadata` live in `src/features/resume/resume-metadata.ts` with their tests in `resume-metadata.test.ts`, and the payload format (`v: 1`) is unchanged, so a PDF exported before the move still imports with every field intact.
 - **AC-6**: `src/components/scale-to-fit-container.tsx` and `src/hooks/use-scale-to-fit.ts` are deleted.
@@ -83,7 +83,7 @@ import { PersonalInfoSection } from '@/features/builder/form-sections/personal-i
 
 ```js
 const PAGE_AREAS = ['landing', 'gallery', 'builder', 'preview'];
-const noParent = { group: ['../*', '../**'], message: 'Use the @/ alias, never ../ (spec 0002).' };
+const noParent = { regex: '(^|/)\\.\\.(/|$)', message: 'Use the @/ alias, never ../ (spec 0002).' };
 const ban = (paths, why) => ({ group: paths, message: `${why} (spec 0002).` });
 
 // ESLint applies the last matching block for a rule, so every block repeats noParent.
