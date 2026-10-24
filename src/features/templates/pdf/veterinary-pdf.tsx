@@ -1,10 +1,10 @@
-import '@/lib/pdf-fonts';
+import '@/features/templates/pdf/pdf-fonts';
 import { Document, Page, View, Text, Link, StyleSheet } from '@react-pdf/renderer';
 import type { ResumeData } from '@/types/form-types';
 import { formatLinkedinDisplay } from '@/lib/utils';
 import { formatCVDateShort, formatCVYear } from '@/lib/date-format';
 import type { AppLang } from '@/lib/app-lang';
-import { getPDFStrings } from '@/lib/pdf-translations';
+import { getPDFStrings } from '@/features/templates/pdf/pdf-translations';
 import { buildResumeMetadata } from '@/lib/resume-metadata';
 import {
     GlobeIcon,
@@ -12,7 +12,7 @@ import {
     MapPinIcon,
     MailIcon,
     PhoneIcon,
-} from '@/lib/pdf-templates/pdf-icons';
+} from '@/features/templates/pdf/pdf-icons';
 
 interface VeterinaryPDFProps {
     data: ResumeData;

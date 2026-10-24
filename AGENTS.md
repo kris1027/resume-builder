@@ -37,7 +37,7 @@ Stored in `docs/specs/`. Format: one folder per spec, `docs/specs/NNNN-title/` w
 - Components are arrow functions with a `ComponentNameProps` type; callbacks `on*`, handlers `handle*`.
 - Validation: `src/schemas/resume-schema.ts` is the single source of truth. Zod messages are i18n keys (`validation.*`), never raw text, and field errors show only after `isTouched`. Required: first name, last name, email (`.email()`).
 - i18n: every user facing string goes through `t()`, and every new key lands in both `src/locales/en` and `src/locales/pl`. The PDF renderer cannot use `t()`; see the PDF context file.
-- Templates: `developer`, `default`, `veterinary` (`src/lib/template-ids.ts`). Each exists twice: an HTML version in `src/components/templates/` (gallery card previews only) and a PDF version in `src/lib/pdf-templates/` (preview, detail page, export). A new resume section must land in all three templates, in both versions, plus the PDF import parser.
+- Templates: `developer`, `default`, `veterinary` (`src/lib/template-ids.ts`). Each exists twice: an HTML version in `src/features/templates/html/` (gallery card previews only) and a PDF version in `src/features/templates/pdf/` (preview, detail page, export). A new resume section must land in all three templates, in both versions, plus the PDF import parser.
 - Templates are always white and never animated; dark mode and motion apply only to the surrounding UI. Language levels use the European framework: A1 to C2 plus `NATIVE`.
 - GDPR clause, when enabled, renders at the bottom of every template: `cv.gdprConsent` with a company name, `cv.gdprConsentGeneric` without.
 - React Compiler: compiles every component and memoizes for you, so skip new `useMemo`/`useCallback`/`memo` written only for speed. If a component misbehaves under it, opt that one out with `'use no memo'` plus a comment naming the reason; never turn the compiler off globally. The `react-hooks` lint rules (v7 `flat.recommended`) flag code it cannot compile.
@@ -58,6 +58,6 @@ Stored in `docs/specs/`. Format: one folder per spec, `docs/specs/NNNN-title/` w
 
 ## Context files
 
-- [src/lib/pdf-templates/AGENTS.md](src/lib/pdf-templates/AGENTS.md) (PDF render, export, preview fitting and import round trip)
+- [src/features/templates/pdf/AGENTS.md](src/features/templates/pdf/AGENTS.md) (PDF render, export, preview fitting and import round trip; `src/features/pdf/AGENTS.md` points to it)
 
 _Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._

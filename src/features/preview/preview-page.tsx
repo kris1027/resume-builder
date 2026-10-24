@@ -5,7 +5,7 @@ import type { ResumeData } from '@/types/form-types';
 import { ArrowLeft, Download, Edit, Loader2, FileWarning, FileText, Files } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageToggle } from '@/components/language-toggle';
-import { exportToPDF, countPdfPages, generateResumeFilename } from '@/lib/pdf-export';
+import { exportToPDF, countPdfPages, generateResumeFilename } from '@/features/pdf/pdf-export';
 import { TEMPLATE_IDS } from '@/lib/template-ids';
 import type { TemplateId } from '@/lib/template-ids';
 import { useTranslation } from 'react-i18next';
@@ -21,9 +21,9 @@ import {
 } from '@/components/ui/alert-dialog';
 import { loadStoredResume } from '@/lib/stored-resume';
 import { PDFViewer, type DocumentProps } from '@react-pdf/renderer';
-import { DeveloperPDF } from '@/lib/pdf-templates/developer-pdf';
-import { DefaultPDF } from '@/lib/pdf-templates/default-pdf';
-import { VeterinaryPDF } from '@/lib/pdf-templates/veterinary-pdf';
+import { DeveloperPDF } from '@/features/templates/pdf/developer-pdf';
+import { DefaultPDF } from '@/features/templates/pdf/default-pdf';
+import { VeterinaryPDF } from '@/features/templates/pdf/veterinary-pdf';
 
 function getPdfDocument(
     resumeData: ResumeData,

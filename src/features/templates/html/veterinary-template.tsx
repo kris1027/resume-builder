@@ -1,7 +1,7 @@
 import type { ResumeData } from '@/types/form-types';
 import { Mail, Phone, Globe, MapPin, Stethoscope, Award, Heart, Briefcase } from 'lucide-react';
 import { formatLinkedinDisplay } from '@/lib/utils';
-import { DescriptionList } from '@/components/description-list';
+import { DescriptionList } from '@/features/templates/html/description-list';
 import { useTranslation } from 'react-i18next';
 import { formatCVDateShort, formatCVYear } from '@/lib/date-utils';
 

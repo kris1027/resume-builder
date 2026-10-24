@@ -16,9 +16,9 @@ import { LanguageToggle } from '@/components/language-toggle';
 import { useTranslation } from 'react-i18next';
 import { ParallaxBackground } from '@/components/parallax-background';
 import { PDFViewer } from '@react-pdf/renderer';
-import { DeveloperPDF } from '@/lib/pdf-templates/developer-pdf';
-import { DefaultPDF } from '@/lib/pdf-templates/default-pdf';
-import { VeterinaryPDF } from '@/lib/pdf-templates/veterinary-pdf';
+import { DeveloperPDF } from '@/features/templates/pdf/developer-pdf';
+import { DefaultPDF } from '@/features/templates/pdf/default-pdf';
+import { VeterinaryPDF } from '@/features/templates/pdf/veterinary-pdf';
 
 export function TemplatePage() {
     const { t, i18n } = useTranslation();

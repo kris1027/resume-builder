@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { VeterinaryTemplate } from '@/components/templates/veterinary-template';
+import { VeterinaryTemplate } from '@/features/templates/html/veterinary-template';
 import { sampleVeterinaryResumeData } from '@/data/sample-resume-data';
 import { sampleVeterinaryResumeDataPl } from '@/data/sample-resume-data-pl';
 import { TemplateCardPreview } from './template-card-preview';

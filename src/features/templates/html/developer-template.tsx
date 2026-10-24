@@ -1,8 +1,8 @@
 import type { ResumeData } from '@/types/form-types';
 import { Mail, Phone, Globe, MapPin } from 'lucide-react';
-import { GithubIcon, LinkedinIcon } from '@/components/icons/brand-icons';
+import { GithubIcon, LinkedinIcon } from '@/features/templates/html/brand-icons';
 import { formatWebsiteDisplay, formatGithubDisplay, formatLinkedinDisplay } from '@/lib/utils';
-import { DescriptionList } from '@/components/description-list';
+import { DescriptionList } from '@/features/templates/html/description-list';
 import { useTranslation } from 'react-i18next';
 import { formatCVDate, formatCVYear } from '@/lib/date-utils';
 

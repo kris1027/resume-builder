@@ -1,0 +1,38 @@
+# PDF templates, export and import
+
+## Overview
+
+The three resume templates rendered with `@react-pdf/renderer`. They drive the live preview, the template detail page and the downloaded file. The import side (`pdfjs-dist`) reads an exported PDF back into the form, so render and parse are one round trip and change together.
+
+## Key files
+
+| File                                                                | Owns                                                                          |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `src/features/templates/pdf/{developer,default,veterinary}-pdf.tsx` | One PDF component per template, props `data`, `compactScale`, `lang`          |
+| `src/features/templates/pdf/pdf-icons.tsx`                          | Contact icons drawn as react-pdf SVG                                          |
+| `src/features/templates/pdf/pdf-translations.ts`                    | EN/PL strings for PDFs (`getPDFStrings`)                                      |
+| `src/lib/date-format.ts`                                            | Month and year via `Intl.DateTimeFormat`, `lang` required                     |
+| `src/lib/app-lang.ts`                                               | `AppLang` (`'en' \| 'pl'`) and `normalizeLang`                                |
+| `src/features/templates/pdf/pdf-fonts.ts`                           | Font registration from `public/fonts/`, with a `?v=` cache buster             |
+| `src/lib/resume-metadata.ts`                                        | Embedded metadata payload (`buildResumeMetadata`, `parseResumeMetadata`)      |
+| `src/features/pdf/pdf-export.tsx`                                   | Download (`exportToPDF`), page counting, filename                             |
+| `src/features/pdf/pdf-parser.ts`                                    | Import: embedded metadata first, text parsing fallback                        |
+| `src/features/pdf/pdfjs-singleton.ts`                               | Lazy pdfjs load, worker at `public/pdf.worker.min.mjs`                        |
+| `src/features/preview/preview-page.tsx`                             | Picks the PDF component and searches for the compact scale that fits one page |
+
+## Conventions
+
+- No `t()` or React context here: react-pdf renders outside the i18n provider. Section titles and the GDPR text come from `pdf-translations.ts`; add new strings there in both `en` and `pl`, keeping the wording in step with `cv.*` keys in the locale files.
+- Dates come from `@/lib/date-format` with the template's `lang` prop, never `@/lib/date-utils`: that one imports `@/i18n/config` to default the language.
+- Every template imports `@/features/templates/pdf/pdf-fonts` and styles through `createStyles(compactScale)`, where `lerp(normal, min, t)` shrinks sizes from 0 (normal) to 1 (most compact). New sizes should go through `lerp` so the one page fit keeps working.
+- Colors are literal hex in a local `C` object; the page background stays white.
+- Each template embeds `buildResumeMetadata(templateId, data)` in the PDF `creator` field (versioned payload `v: 1`). Import reads that first, so a shape change to `ResumeData` needs the payload handled (bump `v` or keep it compatible).
+- The text fallback in `pdf-parser.ts` matches the section headers each template prints. Renaming a header or adding a section means updating the parser and `pdf-parser.test.ts`.
+- `@react-pdf/renderer` is heavy: `pdf-export.tsx` and `preview-page.tsx` import it dynamically, and route code splitting keeps the PDF pages in their own chunks. Never import it from shared code the landing page or builder loads eagerly.
+
+## Gotchas
+
+- react-pdf needs WebAssembly and blob frames: the CSP in both `vite.config.ts` and `vercel.json` allows `wasm-unsafe-eval` and `blob:`. Tightening either breaks preview and export in production only.
+- Changing a font file requires bumping `v` in `pdf-fonts.ts`, or the PWA cache serves the old one. JetBrains Mono was dropped for Fira Code because of a fontkit incompatibility.
+
+_Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._

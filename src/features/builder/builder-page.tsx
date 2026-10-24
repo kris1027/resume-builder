@@ -40,7 +40,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useState, useRef, useEffect } from 'react';
-import { loadResumeFromPDF } from '@/lib/pdf-parser';
+import { loadResumeFromPDF } from '@/features/pdf/pdf-parser';
 import { useNavigate, Link, useSearch } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'motion/react';

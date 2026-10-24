@@ -1,7 +1,7 @@
 import type { ResumeData } from '@/types/form-types';
 import type { TemplateId } from '@/lib/template-ids';
 import { normalizeLang } from '@/lib/app-lang';
-import { getPdfjs } from '@/lib/pdfjs-singleton';
+import { getPdfjs } from '@/features/pdf/pdfjs-singleton';
 
 export interface PDFExportOptions {
     filename?: string;
@@ -19,9 +19,9 @@ export async function exportToPDF(
 
     const [{ pdf }, { DeveloperPDF }, { DefaultPDF }, { VeterinaryPDF }] = await Promise.all([
         import('@react-pdf/renderer'),
-        import('@/lib/pdf-templates/developer-pdf'),
-        import('@/lib/pdf-templates/default-pdf'),
-        import('@/lib/pdf-templates/veterinary-pdf'),
+        import('@/features/templates/pdf/developer-pdf'),
+        import('@/features/templates/pdf/default-pdf'),
+        import('@/features/templates/pdf/veterinary-pdf'),
     ]);
 
     const element =

@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/lib/pdfjs-singleton', () => ({
+vi.mock('@/features/pdf/pdfjs-singleton', () => ({
     getPdfjs: vi.fn(),
 }));
 
 import { generateResumeFilename, countPdfPages } from './pdf-export';
-import { getPdfjs } from '@/lib/pdfjs-singleton';
+import { getPdfjs } from '@/features/pdf/pdfjs-singleton';
 
 describe('generateResumeFilename', () => {
     it('builds filename from first and last name', () => {

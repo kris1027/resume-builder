@@ -1,5 +1,5 @@
 import type { SVGProps } from 'react';
-import { GITHUB_ICON, LINKEDIN_ICON } from '@/lib/brand-icon-paths';
+import { GITHUB_ICON, LINKEDIN_ICON } from '@/features/templates/brand-icon-paths';
 import { cn } from '@/lib/utils';
 
 /**

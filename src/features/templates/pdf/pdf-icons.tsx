@@ -1,5 +1,5 @@
 import { Svg, Path, Circle, Rect } from '@react-pdf/renderer';
-import { GITHUB_ICON, LINKEDIN_ICON } from '@/lib/brand-icon-paths';
+import { GITHUB_ICON, LINKEDIN_ICON } from '@/features/templates/brand-icon-paths';
 
 /**
  * Lucide-style contact icons recreated as @react-pdf/renderer SVG primitives.

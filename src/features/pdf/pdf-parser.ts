@@ -1,6 +1,6 @@
 import type { ResumeFormValues, LanguageLevelProps } from '@/types/form-types';
 import type { TemplateId } from '@/lib/template-ids';
-import { getPdfjs } from '@/lib/pdfjs-singleton';
+import { getPdfjs } from '@/features/pdf/pdfjs-singleton';
 import { parseResumeMetadata } from '@/lib/resume-metadata';
 
 /**
