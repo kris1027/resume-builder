@@ -1,4 +1,4 @@
-import type { ResumeData, ResumeFormValues } from '@/types/form-types';
+import type { ResumeData, ResumeFormValues } from '@/features/resume/form-types';
 import type { TemplateId } from '@/lib/template-ids';
 
 /**

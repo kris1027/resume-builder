@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormSectionCard } from '@/features/builder/form-sections/form-section-card';
-import type { SkillProps } from '@/types/form-types';
+import type { SkillProps } from '@/features/resume/form-types';
 import { Plus, Code, X, GripVertical } from 'lucide-react';
 import { useState } from 'react';
 import type { FormApi } from '@/features/builder/form-component-types';

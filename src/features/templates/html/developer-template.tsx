@@ -1,4 +1,4 @@
-import type { ResumeData } from '@/types/form-types';
+import type { ResumeData } from '@/features/resume/form-types';
 import { Mail, Phone, Globe, MapPin } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '@/features/templates/html/brand-icons';
 import { formatWebsiteDisplay, formatGithubDisplay, formatLinkedinDisplay } from '@/lib/utils';

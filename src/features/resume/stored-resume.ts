@@ -1,5 +1,5 @@
 import { safeStorage } from '@/lib/storage';
-import type { GdprConsentProps, PersonalInfoProps, ResumeData } from '@/types/form-types';
+import type { GdprConsentProps, PersonalInfoProps, ResumeData } from '@/features/resume/form-types';
 
 export const EMPTY_PERSONAL_INFO: PersonalInfoProps = {
     firstName: '',

@@ -16,9 +16,9 @@ import type {
     LanguageLevelProps,
     LanguageProps,
     SkillProps,
-} from '@/types/form-types';
+} from '@/features/resume/form-types';
 import { useForm } from '@tanstack/react-form';
-import { resumeFormSchema } from '@/schemas/resume-schema';
+import { resumeFormSchema } from '@/features/resume/resume-schema';
 import {
     ArrowLeft,
     CheckCircle,
@@ -48,7 +48,7 @@ import { ParallaxBackground } from '@/components/parallax-background';
 import { fadeInUp } from '@/lib/animation-variants';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { safeStorage } from '@/lib/storage';
-import { loadStoredResume, normalizeResume } from '@/lib/stored-resume';
+import { loadStoredResume, normalizeResume } from '@/features/resume/stored-resume';
 import type { FormApi } from '@/features/builder/form-component-types';
 
 const MAX_PDF_SIZE = 10 * 1024 * 1024; // 10MB

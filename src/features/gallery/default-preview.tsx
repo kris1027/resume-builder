@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { DefaultTemplate } from '@/features/templates/html/default-template';
-import { sampleDefaultResumeData } from '@/data/sample-resume-data';
-import { sampleDefaultResumeDataPl } from '@/data/sample-resume-data-pl';
+import { sampleDefaultResumeData } from '@/features/resume/sample-resume-data';
+import { sampleDefaultResumeDataPl } from '@/features/resume/sample-resume-data-pl';
 import { TemplateCardPreview } from './template-card-preview';
 
 export const DefaultPreview = () => {

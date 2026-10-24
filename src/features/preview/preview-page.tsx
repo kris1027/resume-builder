@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useState, type ReactElement } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
-import type { ResumeData } from '@/types/form-types';
+import type { ResumeData } from '@/features/resume/form-types';
 import { ArrowLeft, Download, Edit, Loader2, FileWarning, FileText, Files } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageToggle } from '@/components/language-toggle';
@@ -19,7 +19,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { loadStoredResume } from '@/lib/stored-resume';
+import { loadStoredResume } from '@/features/resume/stored-resume';
 import { PDFViewer, type DocumentProps } from '@react-pdf/renderer';
 import { DeveloperPDF } from '@/features/templates/pdf/developer-pdf';
 import { DefaultPDF } from '@/features/templates/pdf/default-pdf';

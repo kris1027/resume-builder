@@ -1,4 +1,4 @@
-import type { ResumeData } from '@/types/form-types';
+import type { ResumeData } from '@/features/resume/form-types';
 import { Mail, Phone, Globe, MapPin, Stethoscope, Award, Heart, Briefcase } from 'lucide-react';
 import { formatLinkedinDisplay } from '@/lib/utils';
 import { DescriptionList } from '@/features/templates/html/description-list';

@@ -1,4 +1,4 @@
-import type { LanguageLevelProps } from '@/types/form-types';
+import type { LanguageLevelProps } from '@/features/resume/form-types';
 import type { TFunction } from 'i18next';
 
 export const getLanguageLevels = (t: TFunction): { value: LanguageLevelProps; label: string }[] => [

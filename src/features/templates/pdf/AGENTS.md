@@ -14,7 +14,7 @@ The three resume templates rendered with `@react-pdf/renderer`. They drive the l
 | `src/lib/date-format.ts`                                            | Month and year via `Intl.DateTimeFormat`, `lang` required                     |
 | `src/lib/app-lang.ts`                                               | `AppLang` (`'en' \| 'pl'`) and `normalizeLang`                                |
 | `src/features/templates/pdf/pdf-fonts.ts`                           | Font registration from `public/fonts/`, with a `?v=` cache buster             |
-| `src/lib/resume-metadata.ts`                                        | Embedded metadata payload (`buildResumeMetadata`, `parseResumeMetadata`)      |
+| `src/features/resume/resume-metadata.ts`                            | Embedded metadata payload (`buildResumeMetadata`, `parseResumeMetadata`)      |
 | `src/features/pdf/pdf-export.tsx`                                   | Download (`exportToPDF`), page counting, filename                             |
 | `src/features/pdf/pdf-parser.ts`                                    | Import: embedded metadata first, text parsing fallback                        |
 | `src/features/pdf/pdfjs-singleton.ts`                               | Lazy pdfjs load, worker at `public/pdf.worker.min.mjs`                        |

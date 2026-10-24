@@ -61,4 +61,4 @@ export type ResumeData = {
 };
 
 // Form values inferred from Zod schema — single source of truth
-export type { ResumeFormValues } from '@/schemas/resume-schema';
+export type { ResumeFormValues } from '@/features/resume/resume-schema';

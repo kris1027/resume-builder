@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { buildResumeMetadata, parseResumeMetadata } from './resume-metadata';
-import type { ResumeData } from '@/types/form-types';
+import type { ResumeData } from '@/features/resume/form-types';
 
 describe('embedded resume metadata round-trip', () => {
     const data: ResumeData = {

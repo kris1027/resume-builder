@@ -35,7 +35,7 @@ Stored in `docs/specs/`. Format: one folder per spec, `docs/specs/NNNN-title/` w
 - Formatting: Prettier (`.prettierrc`): single quotes (JSX too), tabWidth 4, printWidth 100, Tailwind classes auto sorted.
 - Files are `kebab-case`; import from `src` through the `@/` alias; use `import type` for types (`verbatimModuleSyntax` is on). No `any`.
 - Components are arrow functions with a `ComponentNameProps` type; callbacks `on*`, handlers `handle*`.
-- Validation: `src/schemas/resume-schema.ts` is the single source of truth. Zod messages are i18n keys (`validation.*`), never raw text, and field errors show only after `isTouched`. Required: first name, last name, email (`.email()`).
+- Validation: `src/features/resume/resume-schema.ts` is the single source of truth. Zod messages are i18n keys (`validation.*`), never raw text, and field errors show only after `isTouched`. Required: first name, last name, email (`.email()`).
 - i18n: every user facing string goes through `t()`, and every new key lands in both `src/locales/en` and `src/locales/pl`. The PDF renderer cannot use `t()`; see the PDF context file.
 - Templates: `developer`, `default`, `veterinary` (`src/lib/template-ids.ts`). Each exists twice: an HTML version in `src/features/templates/html/` (gallery card previews only) and a PDF version in `src/features/templates/pdf/` (preview, detail page, export). A new resume section must land in all three templates, in both versions, plus the PDF import parser.
 - Templates are always white and never animated; dark mode and motion apply only to the surrounding UI. Language levels use the European framework: A1 to C2 plus `NATIVE`.

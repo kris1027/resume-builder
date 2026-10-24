@@ -1,7 +1,7 @@
-import type { ResumeFormValues, LanguageLevelProps } from '@/types/form-types';
+import type { ResumeFormValues, LanguageLevelProps } from '@/features/resume/form-types';
 import type { TemplateId } from '@/lib/template-ids';
 import { getPdfjs } from '@/features/pdf/pdfjs-singleton';
-import { parseResumeMetadata } from '@/lib/resume-metadata';
+import { parseResumeMetadata } from '@/features/resume/resume-metadata';
 
 /**
  * Extract text content from a PDF file.

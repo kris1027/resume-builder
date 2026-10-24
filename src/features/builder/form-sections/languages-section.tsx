@@ -9,8 +9,8 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { FormSectionCard } from '@/features/builder/form-sections/form-section-card';
-import { getLanguageLevels } from '@/lib/language-levels';
-import type { LanguageProps, LanguageLevelProps } from '@/types/form-types';
+import { getLanguageLevels } from '@/features/resume/language-levels';
+import type { LanguageProps, LanguageLevelProps } from '@/features/resume/form-types';
 import { Trash2, Plus, Globe, GripVertical } from 'lucide-react';
 import type { FormApi } from '@/features/builder/form-component-types';
 import { useTranslation } from 'react-i18next';

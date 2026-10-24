@@ -1,11 +1,11 @@
 import '@/features/templates/pdf/pdf-fonts';
 import { Document, Page, View, Text, Link, StyleSheet } from '@react-pdf/renderer';
-import type { ResumeData } from '@/types/form-types';
+import type { ResumeData } from '@/features/resume/form-types';
 import { formatLinkedinDisplay } from '@/lib/utils';
 import { formatCVDateShort, formatCVYear } from '@/lib/date-format';
 import type { AppLang } from '@/lib/app-lang';
 import { getPDFStrings } from '@/features/templates/pdf/pdf-translations';
-import { buildResumeMetadata } from '@/lib/resume-metadata';
+import { buildResumeMetadata } from '@/features/resume/resume-metadata';
 import {
     GlobeIcon,
     LinkedinIcon,

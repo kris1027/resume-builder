@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { FormSectionCard } from '@/features/builder/form-sections/form-section-card';
-import type { EducationProps } from '@/types/form-types';
+import type { EducationProps } from '@/features/resume/form-types';
 import { Trash2, Plus, GraduationCap, GripVertical } from 'lucide-react';
 import type { FormApi } from '@/features/builder/form-component-types';
 import { useTranslation } from 'react-i18next';

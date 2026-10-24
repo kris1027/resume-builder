@@ -1,4 +1,4 @@
-import type { ResumeData } from '@/types/form-types';
+import type { ResumeData } from '@/features/resume/form-types';
 import type { TemplateId } from '@/lib/template-ids';
 import { normalizeLang } from '@/lib/app-lang';
 import { getPdfjs } from '@/features/pdf/pdfjs-singleton';

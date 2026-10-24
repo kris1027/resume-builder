@@ -4,12 +4,12 @@ import {
     sampleResumeData,
     sampleDefaultResumeData,
     sampleVeterinaryResumeData,
-} from '@/data/sample-resume-data';
+} from '@/features/resume/sample-resume-data';
 import {
     sampleResumeDataPl,
     sampleDefaultResumeDataPl,
     sampleVeterinaryResumeDataPl,
-} from '@/data/sample-resume-data-pl';
+} from '@/features/resume/sample-resume-data-pl';
 import { ArrowLeft, Edit } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageToggle } from '@/components/language-toggle';

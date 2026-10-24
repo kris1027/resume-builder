@@ -1,4 +1,4 @@
-import type { ResumeData } from '@/types/form-types';
+import type { ResumeData } from '@/features/resume/form-types';
 
 // Developer-focused sample data (for Developer template) - Polish version
 export const sampleResumeDataPl: ResumeData = {
