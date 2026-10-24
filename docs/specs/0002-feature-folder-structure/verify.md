@@ -8,7 +8,7 @@ _Steps derived from spec 0002 acceptance criteria. `/check verify` runs these; `
 - [ ] `ls src/features` → exactly `builder gallery landing pdf preview resume templates` → AC-2
 - [ ] Every row of the move map: the target file exists and the source path does not → AC-1
 - [ ] `find src -name 'index.ts*' -not -path 'src/routes/*'` → no output; `grep -rn "export \* from" src --exclude=routeTree.gen.ts` → no output → AC-4
-- [ ] `grep -rn "features/pdf" src/features/templates` → no output; `resume-metadata.test.ts` exists and passes → AC-5
+- [ ] `grep -rn --include='*.ts' --include='*.tsx' "features/pdf" src/features/templates` → no output; `resume-metadata.test.ts` exists and passes → AC-5
 - [ ] `ls src/components/scale-to-fit-container.tsx src/hooks/use-scale-to-fit.ts` → both missing → AC-6
 - [ ] `pnpm pre-commit` passes; `pnpm test` count equals the baseline in the PR description → AC-7
 - [ ] `git log --follow --oneline src/features/pdf/pdf-parser.ts` shows commits from before the move → AC-8
