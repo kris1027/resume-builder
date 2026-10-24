@@ -49,27 +49,27 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 ### A. Landing page · existing
 
-Marketing home with parallax decorative layers and entrance animations. code in `src/pages/index-page.tsx`
+Marketing home with parallax decorative layers and entrance animations. code in `src/features/landing/`
 
 ### B. Template gallery & detail · existing
 
-Template list and per template page with live previews. code in `src/pages/templates-page.tsx`, `src/pages/template-page.tsx`, `src/components/template-previews/`
+Template list and per template page with live previews. code in `src/features/gallery/`
 
 ### C. Builder form · existing
 
-All resume sections with TanStack Form, Zod validation (i18n errors after touch), drag and drop reordering, GDPR clause toggle. code in `src/pages/builder-page.tsx`, `src/components/form-sections/`, `src/schemas/`
+All resume sections with TanStack Form, Zod validation (i18n errors after touch), drag and drop reordering, GDPR clause toggle. code in `src/features/builder/`, `src/features/resume/`
 
 ### D. Resume templates & preview · existing
 
-Default, Developer and Veterinary templates; preview in paged or single page mode. code in `src/components/templates/`, `src/pages/preview-page.tsx`
+Default, Developer and Veterinary templates; preview in paged or single page mode. code in `src/features/templates/`, `src/features/preview/`
 
 ### E. PDF export · existing
 
-React PDF versions of all three templates with embedded fonts. code in `src/lib/pdf-export.tsx`, `src/lib/pdf-templates/`
+React PDF versions of all three templates with embedded fonts. code in `src/features/pdf/pdf-export.tsx`, `src/features/templates/pdf/`
 
 ### F. PDF import · existing
 
-Reads a previously exported PDF back into the form. code in `src/lib/pdf-parser.ts`, `src/lib/pdfjs-singleton.ts`
+Reads a previously exported PDF back into the form. code in `src/features/pdf/pdf-parser.ts`, `src/features/pdf/pdfjs-singleton.ts`
 
 ### G. Local persistence · existing
 
@@ -81,7 +81,7 @@ react-i18next with browser language detection. code in `src/i18n/`, `src/locales
 
 ### I. Theme (light/dark/system) · existing
 
-code in `src/contexts/theme-context.tsx`, `src/components/theme-toggle.tsx`
+code in `src/lib/theme-context.ts`, `src/components/theme-provider.tsx`, `src/components/theme-toggle.tsx`
 
 ### J. PWA & offline · existing
 
@@ -113,7 +113,7 @@ spec [0001](../specs/0001-stack-review/index.md)
 Apply the verdicts from the stack review one layer at a time, so tests and build stay green after each.
 **Done when:** every "upgrade" verdict is applied, lint, tests, typecheck and build pass, and the app runs with no console errors.
 spec [0001](../specs/0001-stack-review/index.md) (build plan steps 1 to 7 and 12)
-code in `package.json`, `pnpm-workspace.yaml`, `vite.config.ts`, `eslint.config.js`, `src/components/icons/`
+code in `package.json`, `pnpm-workspace.yaml`, `vite.config.ts`, `eslint.config.js`, `src/features/templates/brand-icon-paths.ts`
 
 - [x] Build it: `/develop upgrades & replacements`
     - [x] Runtime, pnpm 12 and dead code removal (step 1), AC-1, AC-9
@@ -133,7 +133,7 @@ spec [0001](../specs/0001-stack-review/index.md) (build plan step 8). code in `s
 
 Format month and year with the browser's `Intl.DateTimeFormat` in the app and all three PDF templates, then drop `date-fns`.
 **Done when:** a pinning test shows identical EN and PL output for all 12 months, and `date-fns` is gone.
-spec [0001](../specs/0001-stack-review/index.md) (build plan step 9). code in `src/lib/date-utils.ts`, `src/lib/pdf-templates/`
+spec [0001](../specs/0001-stack-review/index.md) (build plan step 9). code in `src/lib/date-utils.ts`, `src/features/templates/pdf/`
 
 - [x] Build it: `/develop intl dates`
 
