@@ -1,5 +1,5 @@
 import { createRootRoute } from '@tanstack/react-router';
-import { RootLayout } from '@/components/root-layout';
+import { RootLayout } from '@/app/root-layout';
 import { SITE_URL, SEO_DEFAULTS, OG_DEFAULTS } from '@/lib/seo';
 
 const structuredData = {

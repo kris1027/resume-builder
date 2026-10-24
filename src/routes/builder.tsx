@@ -1,4 +1,4 @@
-import BuilderPage from '@/pages/builder-page';
+import BuilderPage from '@/features/builder/builder-page';
 import { createFileRoute } from '@tanstack/react-router';
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/seo';
 

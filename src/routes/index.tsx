@@ -1,4 +1,4 @@
-import IndexPage from '@/pages/index-page';
+import IndexPage from '@/features/landing/landing-page';
 import { createFileRoute } from '@tanstack/react-router';
 import { SITE_URL, SEO_DEFAULTS } from '@/lib/seo';
 

@@ -146,25 +146,27 @@ Copy `.env.example` to `.env` and configure:
 
 ```
 src/
-├── components/
-│   ├── form-sections/     # CV form section components
-│   ├── templates/         # CV render templates (developer, default, veterinary)
-│   ├── template-previews/ # Template preview SVG cards
-│   ├── ui/                # Reusable UI components (shadcn/ui)
-│   ├── pwa-reload-prompt.tsx   # SW update notification
-│   ├── pwa-install-prompt.tsx  # Browser install prompt
-│   └── offline-indicator.tsx   # Offline status banner
-├── contexts/              # React Context providers (theme)
-├── data/                  # Sample data and CV data types
-├── hooks/                 # Custom hooks (use-theme, use-parallax)
+├── app/                   # App shell: root layout, privacy notice, PWA prompts, offline banner
+├── features/
+│   ├── landing/           # Landing page
+│   ├── gallery/           # Template gallery, detail page and preview cards
+│   ├── builder/           # Builder page and form sections
+│   ├── preview/           # Preview page (one page fit)
+│   ├── templates/         # Resume templates: html/ (gallery cards) and pdf/ (preview, export)
+│   ├── pdf/               # PDF export and import
+│   └── resume/            # Resume schema, form types, sample data, stored resume, metadata
+├── components/            # Shared components (theme, language, decorative layers)
+│   └── ui/                # Reusable UI components (shadcn/ui)
+├── hooks/                 # Shared hooks (use-theme, use-parallax)
+├── lib/                   # Shared utilities (storage, seo, dates, template ids, helpers)
 ├── i18n/                  # i18n configuration
-├── lib/                   # Utilities (pdf-parser, pdf-export, seo, helpers)
 ├── locales/               # Translation files (en/, pl/)
-├── pages/                 # Page components
 ├── routes/                # TanStack Router route definitions
-├── schemas/               # Zod validation schemas (cv-schema)
-└── types/                 # TypeScript type definitions
+├── test/                  # Test setup and utilities
+└── assets/                # Images
 ```
+
+Imports point one way: pages (`landing`, `gallery`, `builder`, `preview`), then `pdf`, `templates`, `resume`, then shared code. `pnpm lint` enforces it (spec 0002).
 
 ## License
 

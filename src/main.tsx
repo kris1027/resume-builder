@@ -4,7 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import './index.css';
-import './i18n/config';
+import '@/i18n/config';
 
 const router = createRouter({ routeTree });
 
