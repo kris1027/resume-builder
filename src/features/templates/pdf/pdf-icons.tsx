@@ -6,8 +6,8 @@ import { GITHUB_ICON, LINKEDIN_ICON } from '@/features/templates/brand-icon-path
  *
  * lucide-react components cannot render inside react-pdf (different renderer),
  * so these mirror the same 24x24 stroke icons used by the on-screen templates
- * (see src/components/templates/*). Brand icon paths are shared with the UI via
- * @/lib/brand-icon-paths; keep the others in sync with lucide if the UI icons change.
+ * (see src/features/templates/html/*). Brand icon paths are shared with the UI via
+ * @/features/templates/brand-icon-paths; keep the others in sync with lucide if the UI icons change.
  */
 interface PDFIconProps {
     size?: number;
