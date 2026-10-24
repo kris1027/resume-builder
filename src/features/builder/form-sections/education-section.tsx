@@ -3,10 +3,10 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { FormSectionCard } from '@/components/form-sections/form-section-card';
+import { FormSectionCard } from '@/features/builder/form-sections/form-section-card';
 import type { EducationProps } from '@/types/form-types';
 import { Trash2, Plus, GraduationCap, GripVertical } from 'lucide-react';
-import type { FormApi } from '@/types/form-component-types';
+import type { FormApi } from '@/features/builder/form-component-types';
 import { useTranslation } from 'react-i18next';
 import {
     DndContext,

@@ -1,9 +1,9 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FormSectionCard } from '@/components/form-sections/form-section-card';
+import { FormSectionCard } from '@/features/builder/form-sections/form-section-card';
 import { ShieldCheck } from 'lucide-react';
-import type { FormApi } from '@/types/form-component-types';
+import type { FormApi } from '@/features/builder/form-component-types';
 import { useTranslation } from 'react-i18next';
 
 interface GdprConsentSectionProps {

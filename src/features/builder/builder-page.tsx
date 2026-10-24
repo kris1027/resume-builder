@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { PersonalInfoSection } from '@/components/form-sections/personal-info-section';
-import { ExperienceSection } from '@/components/form-sections/experience-section';
-import { EducationSection } from '@/components/form-sections/education-section';
-import { SkillsSection } from '@/components/form-sections/skills-section';
-import { LanguagesSection } from '@/components/form-sections/languages-section';
-import { InterestsSection } from '@/components/form-sections/interests-section';
-import { GdprConsentSection } from '@/components/form-sections/gdpr-consent-section';
+import { PersonalInfoSection } from '@/features/builder/form-sections/personal-info-section';
+import { ExperienceSection } from '@/features/builder/form-sections/experience-section';
+import { EducationSection } from '@/features/builder/form-sections/education-section';
+import { SkillsSection } from '@/features/builder/form-sections/skills-section';
+import { LanguagesSection } from '@/features/builder/form-sections/languages-section';
+import { InterestsSection } from '@/features/builder/form-sections/interests-section';
+import { GdprConsentSection } from '@/features/builder/form-sections/gdpr-consent-section';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageToggle } from '@/components/language-toggle';
 import type {
@@ -49,7 +49,7 @@ import { fadeInUp } from '@/lib/animation-variants';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { safeStorage } from '@/lib/storage';
 import { loadStoredResume, normalizeResume } from '@/lib/stored-resume';
-import type { FormApi } from '@/types/form-component-types';
+import type { FormApi } from '@/features/builder/form-component-types';
 
 const MAX_PDF_SIZE = 10 * 1024 * 1024; // 10MB
 

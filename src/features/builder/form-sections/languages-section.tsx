@@ -8,11 +8,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { FormSectionCard } from '@/components/form-sections/form-section-card';
+import { FormSectionCard } from '@/features/builder/form-sections/form-section-card';
 import { getLanguageLevels } from '@/lib/language-levels';
 import type { LanguageProps, LanguageLevelProps } from '@/types/form-types';
 import { Trash2, Plus, Globe, GripVertical } from 'lucide-react';
-import type { FormApi } from '@/types/form-component-types';
+import type { FormApi } from '@/features/builder/form-component-types';
 import { useTranslation } from 'react-i18next';
 import {
     DndContext,
